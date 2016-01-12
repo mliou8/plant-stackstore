@@ -16,8 +16,7 @@ var schema = new mongoose.Schema({
 
     products: [{
         product: {
-            type: Schema.Types.ObjectId,
-            ref: 'Product',
+            type : Schema.Types.Mixed,
             required: true
         },
         quantity: {
@@ -34,14 +33,11 @@ var schema = new mongoose.Schema({
 
     status: {
         type: String,
-        required: true
+        required: true,
+        enum: ['pending','completed','delivered','shipped'  ]
     }
 });
 
 
 
 mongoose.model('Order', schema);
-
-Order.schema.path('status').validate(function (value) {
-  return /pending|completed|delivered|shipped/i.test(value);
-}, 'Invalid Order Status');
