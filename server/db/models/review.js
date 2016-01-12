@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var Product = mongoose.model('Product');
+var User = mongoose.model('User');
 
 var schema = new mongoose.Schema({
     rating: {
@@ -10,11 +12,11 @@ var schema = new mongoose.Schema({
         type: String
     },
     product: {
-        type: Schema.Types.ObjectID,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     },
     user: {
-        type: Schema.Types.ObjectID,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
 });
