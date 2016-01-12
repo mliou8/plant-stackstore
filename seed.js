@@ -20,39 +20,65 @@ name in the environment files.
 var mongoose = require('mongoose');
 var Promise = require('bluebird');
 var chalk = require('chalk');
-var connectToDb = require('./server/db');
-var User = Promise.promisifyAll(mongoose.model('User'));
+var connectToDb = require('./server/db/index.js');
+// var User = Promise.promisifyAll(mongoose.model('User'));
+var Product = Promise.promisifyAll(mongoose.model('Product'));
 
-var seedUsers = function () {
 
-    var users = [
-        {
-            email: 'testing@fsa.com',
-            password: 'password'
-        },
-        {
-            email: 'obama@gmail.com',
-            password: 'potus'
-        }
-    ];
+function seed () {
+    var newProduct = new Product ({
+        name: 'Bonsai Tree',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
+        description: 'this is a bonsai tree it\'s pretty dope',
+        price: '40.00',
+        stock: '3',
+        category: ['tree', 'small']
+    })
+    return newProduct.save();
+}
 
-    return User.createAsync(users);
-
-};
 
 connectToDb.then(function () {
-    User.findAsync({}).then(function (users) {
-        if (users.length === 0) {
-            return seedUsers();
-        } else {
-            console.log(chalk.magenta('Seems to already be user data, exiting!'));
-            process.kill(0);
-        }
-    }).then(function () {
-        console.log(chalk.green('Seed successful!'));
-        process.kill(0);
-    }).catch(function (err) {
-        console.error(err);
-        process.kill(1);
-    });
-});
+        return Product.remove({})
+    })
+    .then(function () {
+        return seed();
+    })
+    .then(function () {
+        console.log('Seeding successful')
+    })
+
+
+// connectToDb.then(function () {
+//     User.findAsync({}).then(function (users) {
+//         if (users.length === 0) {
+//             return seedUsers();
+//         } else {
+//             console.log(chalk.magenta('Seems to already be user data, exiting!'));
+//             process.kill(0);
+//         }
+//     }).then(function () {
+//         console.log(chalk.green('Seed successful!'));
+//         process.kill(0);
+//     }).catch(function (err) {
+//         console.error(err);
+//         process.kill(1);
+//     });
+// });
+
+// var seedUsers = function () {
+
+//     var users = [
+//         {
+//             email: 'testing@fsa.com',
+//             password: 'password'
+//         },
+//         {
+//             email: 'obama@gmail.com',
+//             password: 'potus'
+//         }
+//     ];
+
+//     return User.createAsync(users);
+
+// };
