@@ -28,7 +28,7 @@ var Product = Promise.promisifyAll(mongoose.model('Product'));
 function seed () {
     var newProduct = new Product ({
         name: 'Bonsai Tree',
-        photo: '/static/images/bonsai-tree.jpg',
+        photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
         description: 'this is a bonsai tree it\'s pretty dope',
         price: '40.00',
         stock: '3',
