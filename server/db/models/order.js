@@ -9,14 +9,14 @@ var schema = new mongoose.Schema({
     },
 
     userID: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
 
     products: [{
         product: {
-            type : Schema.Types.Mixed,
+            type : mongoose.Schema.Types.Mixed,
             required: true
         },
         quantity: {

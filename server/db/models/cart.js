@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var schema = new mongoose.Schema({
     items: [{
         product: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Product'
         },
         quantity: {
