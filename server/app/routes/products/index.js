@@ -4,14 +4,71 @@ var mongoose = require('mongoose');
 
 var Product = mongoose.model('Product');
 
-router.get('/', function(){
-
+//route to get a list of all the products
+router.get('/', function(req, res, next){
+	Product.find({})
+	.then(function(products){
+		res.json(products);
+	})
+	.then(null, next);
 })
 
-router.get('/:id', function(){
-
+//route to get a single product matching an ID
+router.get('/:id', function(req, res, next){
+	Product.findOne({_id: req.params.id})
+	.then(function(product){
+		res.json(product);
+	})
+	.then(null, next);
 })
 
-router.get('/:category', function(){
+// //route to create a new product
+router.post('/', function(req, res, next){
+	Product.create({
+		name: req.body.name,
+		photo: req.body.photo,
+		description: req.body.description,
+		price: req.body.price,
+		stock: req.body.stock,
+		// category: req.body.category
+	})
+	.then(function(created){
+		var categories = req.body.category.split(" ");
+		categories.forEach(function(category){
+			created.category.push(category);
+		})
+		created.save();
+		res.json(created);
+	})
+	.then(null,next);
+})
 
+// //route to update a given product
+router.put('/:id', function(req, res, next){
+	Product.findById(req.params.id)
+	.then(function(product){
+		for (var key in req.body){
+			product[key] = req.body[key];
+		}
+		return product.save();
+	})
+	.then(function(product) {
+        return Product.findById(product._id);
+    })
+    .then(function(product) {
+        res.json(product);
+    })
+    .then(null, next);
+})
+
+//route to delete a given product
+router.delete('/:id', function(req, res, next){
+	Product.remove({ _id: req.params.id })
+        .then(function() {
+            res.status(204).json("Deleted");
+        })
+        .then(null, function(err) {
+            err.status = 404;
+            next(err);
+        });
 })
