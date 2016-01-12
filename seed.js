@@ -23,6 +23,7 @@ var chalk = require('chalk');
 var connectToDb = require('./server/db/index.js');
 // var User = Promise.promisifyAll(mongoose.model('User'));
 var Product = Promise.promisifyAll(mongoose.model('Product'));
+var Category = Promise.promisifyAll(mongoose.model('Category'));
 
 
 function seed () {
@@ -38,10 +39,19 @@ function seed () {
 }
 
 
+function seedCategories () {
+    var newCategory = new Category({
+        name: 'Tree'
+    })
+    return newCategory.save();
+}
+
+//Promise.all to save all the different seeds
 connectToDb.then(function () {
         return Product.remove({})
     })
     .then(function () {
+        seedCategories();
         return seed();
     })
     .then(function () {
