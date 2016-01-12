@@ -12,7 +12,7 @@ var schema = new mongoose.Schema({
     },
     address: {
         type: String
-    }
+    },
     password: {
         type: String
     },
