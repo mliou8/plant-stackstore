@@ -2,11 +2,17 @@
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 var _ = require('lodash');
+var Cart = mongoose.model('Cart');
 
 var schema = new mongoose.Schema({
     email: {
-        type: String
+        type: String,
+        unique: true,
+        required: true
     },
+    address: {
+        type: String
+    }
     password: {
         type: String
     },
@@ -24,6 +30,14 @@ var schema = new mongoose.Schema({
     },
     google: {
         id: String
+    },
+    admin: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
+    cart: {
+        type: [Cart]
     }
 });
 
