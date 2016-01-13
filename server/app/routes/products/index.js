@@ -30,15 +30,22 @@ router.post('/', function(req, res, next){
 		description: req.body.description,
 		price: req.body.price,
 		stock: req.body.stock,
-		// category: req.body.category
 	})
 	.then(function(created){
-		var categories = req.body.category.split(" ");
+		if (typeof req.body.category === "string") {
+			var categories = req.body.category.split(", ");
+		}
+		else {
+			var categories = req.body.category;
+		}
+
 		categories.forEach(function(category){
 			created.category.push(category);
 		})
-		created.save();
-		res.json(created);
+		created.save()
+		.then(function(){
+			res.json(created);
+		})			
 	})
 	.then(null,next);
 })
