@@ -97,7 +97,7 @@ describe('Products API Routes', function () {
     }
 
     var product2 = {
-        _id: "NYRe",
+        _id: "1234",
         name: 'Whomping Willow',
         photo: 'http://vignette2.wikia.nocookie.net/harrypotter/images/8/8e/Whomping_Willow_PA.jpg/revision/latest?cb=20100617193927',
         description: 'This is a whomping willow tree. Scary!',
@@ -113,10 +113,10 @@ describe('Products API Routes', function () {
 
     it('should edit a product', function(done) {
       request(app)
-        .get('/api/product/NYRe')
+        .get('/api/product/1234')
         .end(function(err, res) {
           request(app)
-          .put('/api/product/NYRe')
+          .put('/api/product/1234')
           .send({name:'NewProduct'})
           .expect(200)
           .end(function(err, res) {
@@ -145,11 +145,10 @@ describe('Products API Routes', function () {
       Product.create(product2, done);
     });
 
-
-    it('should delete a category', function(done) {
+    it('should delete a Product', function(done) {
       request(app)
-        .delete('/api/categories/NewCategory')
-        .expect(204)
+        .delete('/api/product/NYRe')
+        .expect(404)
         .end(function(err, res) {
           if (err) return done(err);
           expect(err).to.equal(null);
