@@ -9,7 +9,7 @@ var products = [
         "description": 'this is a bonsai tree it\'s pretty dope',
         "price": '40.00',
         "stock": '3',
-        "category": ['tree', 'small']
+        "category": ['tree', 'house plants']
 },
 
 {
