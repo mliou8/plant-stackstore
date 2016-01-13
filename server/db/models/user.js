@@ -5,6 +5,9 @@ var _ = require('lodash');
 var Cart = mongoose.model('Cart');
 
 var schema = new mongoose.Schema({
+    name: {
+        type: String
+    },
     email: {
         type: String,
         unique: true,
@@ -36,9 +39,17 @@ var schema = new mongoose.Schema({
         default: false,
         required: true
     },
-    cart: {
-        type: [Cart]
-    }
+    cart: [{
+        product: {
+            type: String,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        }
+        // type: [Cart]
+    }]
 });
 
 // method to remove sensitive information from user objects before sending them out

@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Review = mongoose.model('Review');
 var User = mongoose.model('User');
 var Order = mongoose.model('Order');
+var Cart = mongoose.model('Cart');
 
 router.get('/', function(req, res, next) {
     User.find().exec()
@@ -13,7 +14,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    User.create(req.body)
+    var newUser = new User(req.body);
+    newUser.admin = false;
+    // var newCart = new Cart({ items: [] });
+    // newUser.cart = newCart;
+
+    newUser.save()
         .then(function(user) {
             res.status(201).json(user);
         })
@@ -79,5 +85,29 @@ router.get('/:id/cart', function(req, res, next) {
     })
     .then(null, next);
 });
+
+router.put('/:id/cart', function(req, res, next) {
+    User.findById(req.params.id).exec()
+        .then(function(user) {
+            user.cart.push({
+                product: req.body.productId,
+                quantity: req.body.quantity
+            });
+
+            console.log('user');
+
+            return user.save();
+        })
+        .then(function(user) {
+            return User.findById(user._id).populate({
+                path: 'cart',
+                populate: { path: 'product' }
+            }).exec();
+        })
+        .then(function(user) {
+            res.json(user.cart);
+        })
+        .then(null, next);
+})
 
 module.exports = router;
