@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var shortid = require('shortid');
+var random = require('mongoose-random');
+
 
 var schema = new mongoose.Schema({
     _id: {
@@ -32,5 +34,7 @@ var schema = new mongoose.Schema({
         }]
     }
 });
+
+schema.plugin(random, { path: 'r' }); // by default `path` is `random`. It's used internally to store a random value on each doc.
 
 mongoose.model('Product', schema);
