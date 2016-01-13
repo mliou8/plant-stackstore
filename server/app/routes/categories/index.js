@@ -22,23 +22,29 @@ router.post('/', function(req, res, next) {
 })
 
 //Returns a category based on the name you passed it
-router.get('/:name', function(req, res, next) {
-    Category.findOne({name:req.params.name}).exec()
+router.get('/:id', function(req, res, next) {
+    Category.findOne({_id:req.params.id}).exec()
         .then(function(category) {
-            res.json(category);
+            //now we have a category and we need to find all the products
+            Product.find({category: $category._id})
+            .then(function(products){
+                console.log(products.name);
+            })
+
+            // res.json(category);
         })
-        .then(error, next);
+        .then(null, next);
 });
 
 //Edits a category based on name
-router.put('/:name', function(req, res, next) {
-    Category.findOne({name:req.params.name}).exec()
+router.put('/:id', function(req, res, next) {
+    Category.findOne({_id:req.params.id}).exec()
     .then(function (category) {
-        category['name'] = req.body.name
+        category.name = req.body.name
         return category.save();
     })
     .then(function (category) {
-        return Category.findOne({name:category.name})
+        return Category.findOne({_id:category.id})
     })
     .then(function(category) {
         res.json(category);
@@ -46,8 +52,8 @@ router.put('/:name', function(req, res, next) {
     .then(null, next);
 })
 
-router.delete('/:name', function(req, res, next) {
-    Category.remove({ name: req.params.id })
+router.delete('/:id', function(req, res, next) {
+    Category.remove({ _id: req.params.id })
         .then(function(info) {
             res.status(204).json(info);
         })

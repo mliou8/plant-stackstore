@@ -2,7 +2,7 @@ app.config(function ($stateProvider) {
     $stateProvider.state('categories', {
         url: '/categories',
         templateUrl: 'js/categories/categories.html',
-        controller: 'CategoryCtrl',
+        controller: 'CategoriesCtrl',
         resolve: {
         	allCategories: function (CategoryFactory){
         		return CategoryFactory.fetchAll();
@@ -11,7 +11,7 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('CategoryCtrl', function($scope, allCategories){
+app.controller('CategoriesCtrl', function($scope, allCategories){
 	$scope.categories = allCategories;
 })
 
@@ -23,6 +23,13 @@ app.factory('CategoryFactory', function($http) {
 			return response.data;
 		})
 	};
+
+    // CategoryFactory.fetchByName = function(name) {
+    //     return $http.get('/api/categories/' + name)
+    //     .then(function(response){
+    //         return response.data;
+    //     });
+    // }
 
 	return CategoryFactory;
 })
