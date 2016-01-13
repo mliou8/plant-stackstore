@@ -3,7 +3,6 @@ var crypto = require('crypto');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Cart = mongoose.model('Cart');
-var random = require('mongoose-random');
 
 var schema = new mongoose.Schema({
     name: {
@@ -41,8 +40,6 @@ var schema = new mongoose.Schema({
         required: true
     }
 });
-
-schema.plugin(random, { path: 'r' }); // by default `path` is `random`. It's used internally to store a random value on each doc.
 
 
 // method to remove sensitive information from user objects before sending them out
