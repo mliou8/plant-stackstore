@@ -41,7 +41,7 @@ function seed () {
 
 function seedCategories () {
     var newCategory = new Category({
-        name: 'Tree'
+        name: 'tree'
     })
     return newCategory.save();
 }

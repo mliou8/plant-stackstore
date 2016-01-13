@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Product = mongoose.model('Product');
 var Category = mongoose.model('Category');
 
+//Returns all categories
 router.get('/', function(req, res, next) {
     Category.find().exec()
         .then(function(categories) {
@@ -11,6 +12,7 @@ router.get('/', function(req, res, next) {
         .then(null, next);
 });
 
+//Creates a new category
 router.post('/', function(req, res, next) {
     Category.create(req.body)
         .then(function(category) {
@@ -19,20 +21,33 @@ router.post('/', function(req, res, next) {
         .then(null, next);
 })
 
-router.get('/:id', function(req, res, next) {
-    Category.findById(req.params.id).exec()
+//Returns a category based on the name you passed it
+router.get('/:name', function(req, res, next) {
+    Category.findOne({name:req.params.name}).exec()
         .then(function(category) {
             res.json(category);
         })
-        .then(null, next);
+        .then(error, next);
 });
 
-router.put('/:id', function(req, res, next) {
-
+//Edits a category based on name
+router.put('/:name', function(req, res, next) {
+    Category.findOne({name:req.params.name}).exec()
+    .then(function (category) {
+        category['name'] = req.body.name
+        return category.save();
+    })
+    .then(function (category) {
+        return Category.findOne({name:category.name})
+    })
+    .then(function(category) {
+        res.json(category);
+    })
+    .then(null, next);
 })
 
-router.delete('/:id', function(req, res, next) {
-    Category.remove({ _id: req.params.id })
+router.delete('/:name', function(req, res, next) {
+    Category.remove({ name: req.params.id })
         .then(function(info) {
             res.status(204).json(info);
         })
