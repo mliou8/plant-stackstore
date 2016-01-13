@@ -45,6 +45,7 @@ var schema = new mongoose.Schema({
 schema.plugin(random, { path: 'r' }); // by default `path` is `random`. It's used internally to store a random value on each doc.
 
 
+
 // method to remove sensitive information from user objects before sending them out
 schema.methods.sanitize =  function () {
     return _.omit(this.toJSON(), ['password', 'salt']);
