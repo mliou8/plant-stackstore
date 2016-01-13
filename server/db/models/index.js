@@ -7,3 +7,4 @@ require('./cart');
 require('./user');
 require('./order');
 require('./review');
+require('./category')
