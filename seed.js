@@ -18,44 +18,93 @@ name in the environment files.
 */
 
 var mongoose = require('mongoose');
+var random = require('mongoose-random');
 var Promise = require('bluebird');
 var chalk = require('chalk');
 var connectToDb = require('./server/db/index.js');
-// var User = Promise.promisifyAll(mongoose.model('User'));
 var Product = Promise.promisifyAll(mongoose.model('Product'));
 var Category = Promise.promisifyAll(mongoose.model('Category'));
-var seedCats =require('./server/seeds/categories.js')
-var seedProducts =require('./server/seeds/products.js')
+var User = Promise.promisifyAll(mongoose.model('User'));
+var Cart = Promise.promisifyAll(mongoose.model('Cart'));
 
-function seedProduct (seedProducts) {
+var categoryData =require('./server/seeds/categories.js')
+var productData =require('./server/seeds/products.js')
+var userData =require('./server/seeds/users.js')
+var cartData =require('./server/seeds/cart.js')
+
+// Category
+// User
+// Product (has categories)
+// Cart (has users, products)
+// Orders (has users, products)
+// Review (has users, products)
+
+
+function seedProduct (productData) {
    var promises = []
-   seedProducts.forEach(function(product){
+   productData.forEach(function(product){
      promises.push(Product.create(product))
    })
    return Promise.all(promises)
 }
 
 
-function seedCategories (seedCats) {
+function seedCategories (categoryData) {
    var promises = []
-   seedCats.forEach(function(cat){
+   categoryData.forEach(function(cat){
      promises.push(Category.create(cat))
    })
    return Promise.all(promises)
 }
 
+function seedUser (userData) {
+   var promises = []
+   userData.forEach(function(user){
+     promises.push(User.create(user))
+   })
+   return Promise.all(promises)
+}
+
+function seedCart (cartData) {
+   var promises = []
+
+   var randomUsers = User.findRandom().limit(10).exec(function (err, users) {
+         console.log("found users", users);
+          return users
+    })
+   console.log("rando users", randomUsers)
+
+   cartData.forEach(function(cart){
+    cart.userID = randomUsers[0]
+    cart.items.forEach(function(item){
+        item.product = "TEST PRODUCT"
+    })
+    console.log("USERID", cart.userID)
+     promises.push(Cart.create(cart))
+   })
+   return Promise.all(promises)
+}
+
+ var randomUsers = [];
+ var randomProducts
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
-        return Promise.all([Category.remove({}),Product.remove({})])
+        return Promise.all([Category.remove({}),Product.remove({}),User.remove({})])
     })
     .then(function () {
-        return seedCategories(seedCats);
+        return seedCategories(categoryData);
+    })
+    .then(function () {
+        return seedUser(userData);
     })
     .then(function(){
-       return seedProduct(seedProducts);
+        return seedProduct(productData);
     })
     .then(function () {
-        console.log('Seeding successful')
+        return seedCart(cartData)
+    })
+    .then(function(){
+         console.log('Seeding successful')
     })
 
 
