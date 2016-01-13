@@ -43,8 +43,6 @@ describe('Products API Routes', function () {
         category: ['mythical', 'dangerous']
     }
 
-
-
     beforeEach('Create a Product', function (done) {
       Product.create(product, done);
     });
@@ -68,13 +66,21 @@ describe('Products API Routes', function () {
     it('should create a product', function(done) {
       request(app)
         .post('/api/products')
-        .send({name: 'Testing Category'})
+        .send(
+      {
+        name: 'Bomping Pillow',
+        photo: 'http://vignette2.wikia.nocookie.net/harrypotter/images/8/8e/Whomping_Willow_PA.jpg/revision/latest?cb=20100617193927',
+        description: 'This is a bomping pillow tree. Scary!',
+        price: '2000.00',
+        stock: '3',
+        category: ['mythical', 'dangerous']
+      }
+        )
         .expect(201)
         .end(function(err, res) {
           if (err) return done(err);
           expect(err).to.equal(null);
-          expect(res.body.name).to.be.an('string');
-          expect(res.body.name).to.equal('Testing Category');
+          expect(res.body.name).to.equal('Bomping Pillow');
           done();
         });
     });

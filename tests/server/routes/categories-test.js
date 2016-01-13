@@ -26,7 +26,7 @@ describe('Categories API Routes', function () {
   describe('Getting', function() {
 
 	var category = {
-			name: 'Test Category'
+			name: 'TestCategory'
 		};
 
 		beforeEach('Create a Category', function (done) {
@@ -58,7 +58,37 @@ describe('Categories API Routes', function () {
           if (err) return done(err);
           expect(err).to.equal(null);
           expect(res.body.name).to.be.an('string');
-          expect(res.body.name).to.equal('Testing Category');
+          expect(res.body.name).to.equal('TestCategory');
+          done();
+        });
+    });
+  });
+
+  describe('Putting', function() {
+    it('should edit a category', function(done) {
+      request(app)
+        .put('/api/categories/TestCategory')
+        .send({name: 'New Category'})
+        .expect(200)
+        .end(function(err, res) {,bbb
+          if (err) return done(err);
+          expect(err).to.equal(null);
+          expect(res.body.name).to.equal(' New Category ');
+          done();
+        });
+    });
+  });
+
+  describe('Deleting', function() {
+    it('should delete a category', function(done) {
+      request(app)
+        .put('/api/categories/TestCategory')
+        .send({name: 'New Category'})
+        .expect(200)
+        .end(function(err, res) {,bbb
+          if (err) return done(err);
+          expect(err).to.equal(null);
+          expect(res.body.name).to.equal(' New Category ');
           done();
         });
     });
