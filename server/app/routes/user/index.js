@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var mongoose = require('mongoose');
+var Promise = require('bluebird');
 var Review = mongoose.model('Review');
 var User = mongoose.model('User');
 var Order = mongoose.model('Order');
@@ -14,14 +15,16 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    var newUser = new User(req.body);
-    newUser.admin = false;
-    // var newCart = new Cart({ items: [] });
-    // newUser.cart = newCart;
-
-    newUser.save()
+    User
+        .create(req.body)
         .then(function(user) {
-            res.status(201).json(user);
+            var cart = Cart.create({ user: user._id });
+            user.admin = false;
+            var userSave = user.save();
+            return Promise.all([userSave, cart]);
+        })
+        .then(function(result) {
+            res.status(201).json({ user: result[0], cart: result[1] });
         })
         .then(null, next);
 });
@@ -54,7 +57,7 @@ router.put('/:id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     User.remove({ _id: req.params.id })
         .then(function(info) {
-            res.status(204).json(info);
+            res.json(info);
         })
         .then(null, function(err) {
             err.status = 404;
@@ -79,12 +82,55 @@ router.get('/:id/orders', function(req, res, next) {
 });
 
 router.get('/:id/cart', function(req, res, next) {
-  User.findById(req.params.id).exec()
-    .then(function(user) {
-        res.json(user.cart);
-    })
-    .then(null, next);
+    Cart
+        .findOne({ user: req.params.id })
+        // .populate('user items.product')
+        .then(function(cart) {
+            res.json(cart);
+        })
+        .then(null, next);
 });
+
+router.post('/:id/cart', function(req, res, next) {
+    User
+        .findById(req.params.id)
+        .then(function(user) {
+            return Cart.findOne({ user: user._id });
+        })
+        .then(function(cart) {
+            var itemIdx = cart.items.map(function(obj, index) {
+                if(obj.product === req.body.product) {
+                    return index;
+                }
+            });
+
+            if(itemIdx) {
+                cart.items[itemIdx].quantity += req.body.quantity;
+            } else {
+                cart.items.push(req.body);
+            }
+
+            return cart.save();
+        })
+        .then(function(cart) {
+            console.log(cart,'NOW FINDING SAVED CART');
+            return Cart.findById(cart._id);
+        })
+        .then(function(cart) {
+            console.log(cart,'NOW SENDING CART');
+            res.status(201).json(cart);
+        })
+        .then(null, next);
+})
+
+router.delete('/:id/cart', function(req, res, next) {
+    Cart
+        .remove({ user: req.params.id })
+        .then(function(data) {
+            res.json(data);
+        })
+        .then(null, next);
+})
 
 router.put('/:id/cart', function(req, res, next) {
     User.findById(req.params.id).exec()
