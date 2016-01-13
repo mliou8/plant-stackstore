@@ -24,35 +24,35 @@ var connectToDb = require('./server/db/index.js');
 // var User = Promise.promisifyAll(mongoose.model('User'));
 var Product = Promise.promisifyAll(mongoose.model('Product'));
 var Category = Promise.promisifyAll(mongoose.model('Category'));
+var seedCats =require('./server/seeds/categories.js')
+var seedProducts =require('./server/seeds/products.js')
 
-
-function seed () {
-    var newProduct = new Product ({
-        name: 'Bonsai Tree',
-        photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
-        description: 'this is a bonsai tree it\'s pretty dope',
-        price: '40.00',
-        stock: '3',
-        category: ['tree', 'small']
-    })
-    return newProduct.save();
+function seedProduct (seedProducts) {
+   var promises = []
+   seedProducts.forEach(function(product){
+     promises.push(Product.create(product))
+   })
+   return Promise.all(promises)
 }
 
 
-function seedCategories () {
-    var newCategory = new Category({
-        name: 'tree'
-    })
-    return newCategory.save();
+function seedCategories (seedCats) {
+   var promises = []
+   seedCats.forEach(function(cat){
+     promises.push(Category.create(cat))
+   })
+   return Promise.all(promises)
 }
 
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
-        return Product.remove({})
+        return Promise.all([Category.remove({}),Product.remove({})])
     })
     .then(function () {
-        seedCategories();
-        return seed();
+        return seedCategories(seedCats);
+    })
+    .then(function(){
+       return seedProduct(seedProducts);
     })
     .then(function () {
         console.log('Seeding successful')
