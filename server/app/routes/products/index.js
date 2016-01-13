@@ -15,6 +15,7 @@ router.get('/', function(req, res, next){
 
 //route to get a single product matching an ID
 router.get('/:id', function(req, res, next){
+	console.log("You reached the route")
 	Product.findOne({_id: req.params.id})
 	.then(function(product){
 		res.json(product);
@@ -44,7 +45,7 @@ router.post('/', function(req, res, next){
 		})
 		created.save()
 		.then(function(){
-			res.json(created);
+			res.status("201").json(created);
 		})
 	})
 	.then(null,next);

@@ -42,7 +42,7 @@ describe('Categories API Routes', function () {
           if (err) return done(err);
           expect(err).to.equal(null);
           expect(res.body).to.be.an('array');
-          expect(res.body[0].name).to.equal('Test Category');
+          expect(res.body[0].name).to.equal('TestCategory');
           done();
         });
     });
@@ -52,7 +52,7 @@ describe('Categories API Routes', function () {
     it('should create a category', function(done) {
       request(app)
         .post('/api/categories')
-        .send({name: 'Testing Category'})
+        .send({name:'TestCategory'})
         .expect(201)
         .end(function(err, res) {
           if (err) return done(err);
@@ -65,30 +65,50 @@ describe('Categories API Routes', function () {
   });
 
   describe('Putting', function() {
+
+      var category = {
+      name: 'TestCategory'
+    };
+
+    beforeEach('Create a Category', function (done) {
+      Category.create(category, done);
+    });
+
     it('should edit a category', function(done) {
       request(app)
-        .put('/api/categories/TestCategory')
-        .send({name: 'New Category'})
-        .expect(200)
-        .end(function(err, res) {,bbb
-          if (err) return done(err);
-          expect(err).to.equal(null);
-          expect(res.body.name).to.equal(' New Category ');
-          done();
+        .get('/api/categories/TestCategory')
+        .end(function(err, res) {
+          request(app)
+          .put('/api/categories/TestCategory')
+          .send({name:'NewCategory'})
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            expect(err).to.equal(null);
+            expect(res.body.name).to.equal('NewCategory');
+            done();
         });
+        })
     });
   });
 
   describe('Deleting', function() {
+    var category = {
+      name: 'TestCategory'
+    };
+
+    beforeEach('Create a Category', function (done) {
+      Category.create(category, done);
+    });
+
     it('should delete a category', function(done) {
       request(app)
-        .put('/api/categories/TestCategory')
-        .send({name: 'New Category'})
-        .expect(200)
-        .end(function(err, res) {,bbb
+        .delete('/api/categories/NewCategory')
+        .expect(204)
+        .end(function(err, res) {
           if (err) return done(err);
           expect(err).to.equal(null);
-          expect(res.body.name).to.equal(' New Category ');
+          expect(res.body.name).to.equal(undefined);
           done();
         });
     });
