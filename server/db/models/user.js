@@ -38,19 +38,9 @@ var schema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true
-    },
-    cart: [{
-        product: {
-            type: String,
-            ref: 'Product'
-        },
-        quantity: {
-            type: Number,
-            default: 1
-        }
-        // type: [Cart]
-    }]
+    }
 });
+
 
 // method to remove sensitive information from user objects before sending them out
 schema.methods.sanitize =  function () {
