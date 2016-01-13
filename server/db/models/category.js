@@ -9,3 +9,4 @@ var schema = new mongoose.Schema({
 });
 
 mongoose.model('Category', schema);
+module.exports= {'Category': mongoose.model('Category', schema)}
