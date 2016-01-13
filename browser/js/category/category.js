@@ -3,15 +3,29 @@ app.config(function($stateProvider) {
         url: '/categories/:categoryName',
         // controller: 'CategoryCtrl',
         templateUrl: 'js/category/category.html',
-        controller: function($scope, $stateParams, product) {
-            $scope.category = $stateParams.categoryName;
-            $scope.product=product;
-        },
-        resolve: {
-            product: function(ProductFactory, $stateParams) {
-                return ProductFactory.fetchById($stateParams.productId);
-            }
+        controller: function($scope, $stateParams, CategoryFactory) {
+            CategoryFactory.fetchByName($stateParams.categoryName)
+            .then(function(category){
+                $scope.category = category;
+            })
+            .then(function(){
+                console.log("Id:" + $scope.category._id)
+                CategoryFactory.fetchById($scope.category._id)
+                .then(function(products){
+                    console.log(products);
+                    $scope.products = products;
+                    console.log($scope.products);
+                })
+            })
         }
+        // resolve: {
+        //     category: function(CategoryFactory, $stateParams) {
+        //         return CategoryFactory.fetchByName($stateParams.name);
+        //     },
+        //     products: function(CategoryFactory, $stateParams, category) {
+        //         return CategoryFactory.fetchById(category._id);
+        //     }
+        // }
     });
 });
 

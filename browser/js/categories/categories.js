@@ -24,12 +24,21 @@ app.factory('CategoryFactory', function($http) {
 		})
 	};
 
-    // CategoryFactory.fetchByName = function(name) {
-    //     return $http.get('/api/categories/' + name)
-    //     .then(function(response){
-    //         return response.data;
-    //     });
-    // }
+    CategoryFactory.fetchById = function(id) {
+
+        return $http.get('/api/categories/' + id)
+        .then(function(response){
+            return response.data;
+        });
+    }
+
+    CategoryFactory.fetchByName = function(name) {
+        return $http.get('api/categories/name/'+ name)
+        .then(function(response){
+            console.log("response:" + response.data);
+            return response.data;
+        })
+    }
 
 	return CategoryFactory;
 })

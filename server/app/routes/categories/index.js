@@ -26,15 +26,21 @@ router.get('/:id', function(req, res, next) {
     Category.findOne({_id:req.params.id}).exec()
         .then(function(category) {
             //now we have a category and we need to find all the products
-            Product.find({category: $category._id})
+            Product.find({category: category._id})
             .then(function(products){
-                console.log(products.name);
+                res.json(products);
             })
-
-            // res.json(category);
         })
         .then(null, next);
 });
+
+router.get('/name/:name', function(req,res,next){
+    Category.findOne({name:req.params.name})
+    .then(function(category){
+        res.json(category);
+    })
+    .then(null,next);
+})
 
 //Edits a category based on name
 router.put('/:id', function(req, res, next) {

@@ -1,7 +1,7 @@
 <div>
     <h3>{{ product.name }}</h3>
     <h5>${{ product.price }}</h5>
-    <h5><span ng-repeat="category in product.category"><a uisref="category({categoryId: category._id})">{{ category }}</a><span ng-show="!$last">, </span></span></h5>
+    <h5><span ng-repeat="category in product.category"><a uisref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
     <h5>#{{ product._id }}</h5>
     <h5 ng-show="product.stock === 0">Out of stock.</h5>
     <h5 ng-show="product.stock > 0">{{ product.stock }} available</h5>
