@@ -42,10 +42,20 @@ var cartData =require('./server/seeds/cart.js')
 
 function seedProduct (productData) {
    var promises = []
-   productData.forEach(function(product){
-     promises.push(Product.create(product))
-   })
-   return Promise.all(promises)
+   Category.find({})
+      .then(function(categories){
+        productData.forEach(function(product){
+            for (i=0 ; i < product.category.length ; i++) {
+                 var check = categories.filter(function(category){
+                                return category.name === product.category[i]
+                            })[0]._id
+                 product.category[i] = check;
+            }
+            promises.push(Product.create(product))
+        })
+
+      })
+    return Promise.all(promises)
 }
 
 
@@ -104,22 +114,11 @@ connectToDb.then(function () {
         return seedUser(userData);
     })
     .then(function(){
-
-                return seedProduct(productData);
-
+        return seedProduct(productData);
     })
-    .then(function () {
-        User.findRandom().limit(10).exec(function (err, users) {
-         console.log("found users", users);
-            randomUsers = users;
-            console.log("new users", randomUsers)
-            return users
-         })
-        .then(function(){
-             return seedCart(cartData)
-         })
-
-        })
+    .then(function(){
+         return seedCart(cartData)
+     })
     .then(function(){
          console.log('Seeding successful')
     })
