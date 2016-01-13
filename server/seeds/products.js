@@ -19,7 +19,43 @@ var products = [
         "price": '240.00',
         "stock": '2',
         "category": ['tree', 'holiday']
-}
+},
+{
+        "name": 'Tree Beard',
+        "photo": 'http://snowder.com/blog/ent_300.jpg',
+        "description": 'Greetings, little hobbits',
+        "price": '400.00',
+        "stock": '1',
+        "category": ['tree', 'mythical']
+},
+
+{
+        "name": 'Tulips',
+        "photo": 'http://blog.americanmeadows.com/wp-content/uploads/2012/10/Tulip-Peach-Pink.jpg',
+        "description": 'Beautiful pot of tulips',
+        "price": '24.00',
+        "stock": '5',
+        "category": ['house plants', 'flowers']
+},
+
+{
+        "name": 'Tomato Plant Seeds',
+        "photo": 'http://tinyfarmblog.com/wp-content/uploads/2009/04/spr09_first-tomato-seedlings.jpg',
+        "description": 'One small bag of seeds',
+        "price": '24.00',
+        "stock": '5',
+        "category": ['house plants', 'seeds']
+},
+
+{
+        "name": 'Springfield Nuclear Power Plant',
+        "photo": 'http://www.risefeed.com/wp-content/uploads/2015/08/Springfield_Nuclear_Power_Plant2.png',
+        "description": 'Doh',
+        "price": '24.00',
+        "stock": '5',
+        "category": ['nuclear']
+},
+
 ]
 module.exports = products;
 

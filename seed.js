@@ -67,26 +67,32 @@ function seedUser (userData) {
 
 function seedCart (cartData) {
    var promises = []
-
-   var randomUsers = User.findRandom().limit(10).exec(function (err, users) {
-         console.log("found users", users);
-          return users
-    })
-   console.log("rando users", randomUsers)
-
-   cartData.forEach(function(cart){
-    cart.userID = randomUsers[0]
-    cart.items.forEach(function(item){
-        item.product = "TEST PRODUCT"
-    })
-    console.log("USERID", cart.userID)
-     promises.push(Cart.create(cart))
-   })
+   var cartCount = 0
+   while(cartCount<5){
+    var cartData = {userID: null , items: []};
+    User.findRandom().limit(1).exec()
+        .then(function(user){
+             cartData.userID = user[0]._id
+             return user
+        })
+        .then(function(){
+            Product.findRandom().limit(4).exec()
+                .then(function(products){
+                    for (i = 0 ; i < 4; i++){
+                        cartData.items[i] = {};
+                        cartData.items[i].product = products[i]._id
+                        cartData.items[i].quantity = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+                    }
+                    promises.push(Cart.create(cartData))
+                })
+        })
+    cartCount++
+   }
    return Promise.all(promises)
 }
 
  var randomUsers = [];
- var randomProducts
+ var randomProducts = []
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
         return Promise.all([Category.remove({}),Product.remove({}),User.remove({})])
@@ -98,11 +104,22 @@ connectToDb.then(function () {
         return seedUser(userData);
     })
     .then(function(){
-        return seedProduct(productData);
+
+                return seedProduct(productData);
+
     })
     .then(function () {
-        return seedCart(cartData)
-    })
+        User.findRandom().limit(10).exec(function (err, users) {
+         console.log("found users", users);
+            randomUsers = users;
+            console.log("new users", randomUsers)
+            return users
+         })
+        .then(function(){
+             return seedCart(cartData)
+         })
+
+        })
     .then(function(){
          console.log('Seeding successful')
     })
