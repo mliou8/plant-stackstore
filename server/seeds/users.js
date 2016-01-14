@@ -1,7 +1,9 @@
 var mongoose = require('mongoose');
 
 var users = [
-{"email": "testuser@gmail.com",
+{
+ "name": "Carol Flynn",
+ "email": "testuser@gmail.com",
  "address": "224 Burns St",
  "password": "secretpassword",
  "salt": "testuser",
@@ -10,7 +12,9 @@ var users = [
  "google": "testuser@gmail",
  "admin": false
 },
-{"email": "testuser2@gmail.com",
+{
+ "name": "Bobby Hanover",
+ "email": "testuser2@gmail.com",
  "address": "1 Burns St",
  "password": "secretpassword",
  "salt": "testuser",
@@ -19,7 +23,9 @@ var users = [
  "google": "testuser2@gmail",
  "admin": false
 },
-{"email": "testuser3@gmail.com",
+{
+ "name": "Sasha Resnikov",
+ "email": "testuser3@gmail.com",
  "address": "5 Hanover",
  "password": "secretpassword",
  "salt": "testuser3",
@@ -28,7 +34,9 @@ var users = [
  "google": "testuser3@gmail",
  "admin": false
 },
-{"email": "testuser4@gmail.com",
+{
+ "name": "Minkus Pinkus",
+ "email": "testuser4@gmail.com",
  "address": "10 Hanover",
  "password": "secretpassword",
  "salt": "testuser4",
