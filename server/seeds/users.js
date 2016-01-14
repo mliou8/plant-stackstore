@@ -16,6 +16,15 @@ var users = [
  "facebook": "emilyches",
  "google": "testuser@gmail",
  "admin": false
+},
+{"email": "testuser2@gmail.com",
+ "address": "1 Burns St",
+ "password": "secretpassword",
+ "salt": "testuser",
+ "twitter": "emches",
+ "facebook": "emilyches",
+ "google": "testuser2@gmail",
+ "admin": false
 }
 ];
 module.exports = users;
