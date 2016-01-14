@@ -4,6 +4,7 @@ var Review = mongoose.model('Review');
 
 router.get('/', function(req, res, next) {
     Review.find().exec()
+        .populate('user')
         .then(function(reviews) {
             res.json(reviews);
         })
@@ -20,6 +21,7 @@ router.post('/', function(req, res, next) {
 
 router.get('/:id', function(req, res, next) {
     Review.findById(req.params.id).exec()
+        .populate('user')
         .then(function(review) {
             res.json(review);
         })
