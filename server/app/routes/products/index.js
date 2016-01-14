@@ -3,6 +3,7 @@ module.exports = router;
 var mongoose = require('mongoose');
 
 var Product = mongoose.model('Product');
+var Review = mongoose.model('Review');
 
 //route to get a list of all the products
 router.get('/', function(req, res, next){
@@ -16,10 +17,24 @@ router.get('/', function(req, res, next){
 //route to get a single product matching an ID
 router.get('/:id', function(req, res, next){
 	Product.findOne({_id: req.params.id})
+	.populate('category')
 	.then(function(product){
 		res.json(product);
 	})
 	.then(null, next);
+})
+
+//route to get the reviews of a single product matching an ID
+router.get('/:id/reviews', function(req,res,next){
+	Product.findOne({_id: req.params.id})
+	.then(function(foundProduct){
+		Review.find({product: foundProduct._id})
+		.populate('user')
+		.then(function(reviews){
+			res.json(reviews);
+		})
+	})
+	.then(null,next);
 })
 
 // //route to create a new product

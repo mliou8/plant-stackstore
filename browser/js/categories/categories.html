@@ -1,0 +1,14 @@
+<div>
+    <h3>Categories</h3>
+    <div class="row">
+        <div ng-repeat="category in categories" class="col-xs-4">
+            <a class="thumbnail" ui-sref="category({categoryName: category.name})">
+                <div class="caption">
+                    <h5>
+                        <span>{{ category.name }}</span>
+                    </h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

@@ -29,6 +29,12 @@ app.factory('ProductFactory', function($http) {
                 .then(function(response) {
                     return response.data;
                 });
+        },
+        fetchReviewsById: function(id) {
+            return $http.get('api/products/' + id + '/reviews')
+            .then(function(response){
+                return response.data;
+            });
         }
     }
 });

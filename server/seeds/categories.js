@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var Cart = mongoose.model('Cart');
 
 
 var categories = [{"name": "tree" },
