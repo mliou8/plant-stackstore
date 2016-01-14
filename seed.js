@@ -46,20 +46,21 @@ var myUsers;
 function seedProduct (productData) {
   console.log("seeding products")
    var promises = []
+
         productData.forEach(function(product){
-            //console.log("foreach", product)
             for (i=0 ; i < product.category.length ; i++) {
                  var check = myCategories.filter(function(category){
+                                // if (category.name === "flowers"){
+                                // console.log("array cat", category.name)
+                                // console.log("prod cat", product.category[i])
+                                // console.log(category.name ===product.category[i])}
                                 return category.name === product.category[i]
                             })[0]._id
-                 //console.log("check", check)
                  product.category[i] = check;
-                promises.push(Product.create(product))
-
             }
+               promises.push(Product.create(product))
         })
 
-   // console.log("product promises", promises)
     return Promise.all(promises)
 }
 
