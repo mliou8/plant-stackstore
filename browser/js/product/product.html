@@ -6,6 +6,19 @@
     <h5>#{{ product._id }}</h5>
     <h5 ng-show="product.stock === 0">Out of stock.</h5>
     <h5 ng-show="product.stock > 0">{{ product.stock }} available</h5>
+    <div>
+        <form name="order-form" novalidate ng-submit="addToCart()">
+            <fieldset>
+                <div>
+                    <label for="quantity">Qty</label>
+                    <select name="quantity" ng-options="n.val as n.name for n in quantities" ng-model="amount"></select>
+                </div>
+                <div>
+                    <button type="submit">Add To Cart</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
     <h4>Reviews</h4>
     <div class="row">
         <div ng-repeat="review in reviews" class="col-xs-12">
