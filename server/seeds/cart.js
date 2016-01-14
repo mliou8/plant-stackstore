@@ -4,7 +4,7 @@ var Cart = mongoose.model('Cart');
 
 var carts = [
 {
-    userID: "",
+    user: "",
     items: [
         {
             product: null,

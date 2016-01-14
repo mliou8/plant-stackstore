@@ -79,10 +79,10 @@ function seedCart (cartData) {
    var promises = []
    var cartCount = 0
    while(cartCount<5){
-    var cartData = {userID: null , items: []};
+    var cartData = {user: null , items: []};
     User.findRandom().limit(1).exec()
         .then(function(user){
-             cartData.userID = user[0]._id
+             cartData.user = user[0]._id
              return user
         })
         .then(function(){
