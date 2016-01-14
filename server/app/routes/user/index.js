@@ -8,7 +8,7 @@ var Cart = mongoose.model('Cart');
 router.get('/', function(req, res, next) {
     User.find().exec()
         .then(function(users) {
-            console.log("FOUND USERS", users)
+            // console.log("FOUND USERS", users)
             res.json(users);
         })
         .then(null, next);
@@ -72,7 +72,7 @@ router.get('/:id/reviews', function(req, res, next) {
 });
 
 router.get('/:id/orders', function(req, res, next) {
-    Order.find({ userId: req.params.id }).exec()
+    Order.find({ userID: req.params.id }).exec()
         .then(function(orders) {
             res.json(orders);
         })
