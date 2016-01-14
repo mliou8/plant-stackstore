@@ -8,6 +8,7 @@ var Cart = mongoose.model('Cart');
 router.get('/', function(req, res, next) {
     User.find().exec()
         .then(function(users) {
+            console.log("FOUND USERS", users)
             res.json(users);
         })
         .then(null, next);
