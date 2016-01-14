@@ -26,11 +26,11 @@ var Product = Promise.promisifyAll(mongoose.model('Product'));
 var Category = Promise.promisifyAll(mongoose.model('Category'));
 var User = Promise.promisifyAll(mongoose.model('User'));
 var Cart = Promise.promisifyAll(mongoose.model('Cart'));
+var Review = Promise.promisifyAll(mongoose.model('Review'));
 
 var categoryData =require('./server/seeds/categories.js')
 var productData =require('./server/seeds/products.js')
 var userData =require('./server/seeds/users.js')
-var cartData =require('./server/seeds/cart.js')
 
 // Category
 // User
@@ -39,27 +39,33 @@ var cartData =require('./server/seeds/cart.js')
 // Orders (has users, products)
 // Review (has users, products)
 
+var myCategories;
+var myProducts;
+var myUsers;
 
 function seedProduct (productData) {
+  console.log("seeding products")
    var promises = []
-   Category.find({})
-      .then(function(categories){
         productData.forEach(function(product){
+            //console.log("foreach", product)
             for (i=0 ; i < product.category.length ; i++) {
-                 var check = categories.filter(function(category){
+                 var check = myCategories.filter(function(category){
                                 return category.name === product.category[i]
                             })[0]._id
+                 //console.log("check", check)
                  product.category[i] = check;
+                promises.push(Product.create(product))
+
             }
-            promises.push(Product.create(product))
         })
 
-      })
+   // console.log("product promises", promises)
     return Promise.all(promises)
 }
 
 
 function seedCategories (categoryData) {
+  console.log("seeding categories")
    var promises = []
    categoryData.forEach(function(cat){
      promises.push(Category.create(cat))
@@ -68,6 +74,7 @@ function seedCategories (categoryData) {
 }
 
 function seedUser (userData) {
+  console.log("seeding users")
    var promises = []
    userData.forEach(function(user){
      promises.push(User.create(user))
@@ -75,52 +82,77 @@ function seedUser (userData) {
    return Promise.all(promises)
 }
 
-function seedCart (cartData) {
+function seedCart () {
+  console.log("seeding carts")
    var promises = []
-   var cartCount = 0
-   while(cartCount<5){
-    var cartData = {userID: null , items: []};
-    User.findRandom().limit(1).exec()
-        .then(function(user){
-             cartData.userID = user[0]._id
-             return user
-        })
-        .then(function(){
-            Product.findRandom().limit(4).exec()
-                .then(function(products){
-                    for (i = 0 ; i < 4; i++){
-                        cartData.items[i] = {};
-                        cartData.items[i].product = products[i]._id
-                        cartData.items[i].quantity = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
-                    }
-                    promises.push(Cart.create(cartData))
-                })
-        })
-    cartCount++
-   }
-   return Promise.all(promises)
+    var carts =[];
+
+        for(i=0; i< myUsers.length ; i++){
+          carts[i] = {userID: myUsers[i]._id.toString(), items: [] };
+        }
+
+
+       for (i = 0 ; i < carts.length; i++){
+           carts[i].items.push({
+              product: myProducts[i]._id,
+              quantity: Math.floor(Math.random() * (10 - 1 + 1)) + 1
+            });
+
+         promises.push(Cart.create(carts[i]))
+
+       }
+
+        return Promise.all(promises)
 }
 
- var randomUsers = [];
- var randomProducts = []
+function seedReviews () {
+   var promises = []
+   var reviewCount = 10;
+   console.log("seeding reviews")
+    while (reviewCount > 0){
+      var rating = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+      var productIndex = Math.floor(Math.random() * myProducts.length) ;
+      var userIndex = Math.floor(Math.random() * myUsers.length) ;
+      var text = "LOREM IPSUM"
+      var reviewData = { rating: rating,
+                          text: "LOREM IPSUM",
+                          product: myProducts[productIndex]._id.toString(),
+                          user:  myUsers[userIndex]._id
+                        }
+      //console.log("reviewData", reviewData)
+      promises.push(Review.create(reviewData))
+      reviewCount--
+    }
+      return Promise.all(promises)
+
+}
+
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
-        return Promise.all([Category.remove({}),Product.remove({}),User.remove({})])
+        return Promise.all([Category.remove({}),Product.remove({}),User.remove({}),Cart.remove({}),Review.remove({})])
     })
     .then(function () {
         return seedCategories(categoryData);
     })
-    .then(function () {
+    .then(function (categories) {
+        myCategories = categories
         return seedUser(userData);
     })
-    .then(function(){
+    .then(function(users){
+        myUsers = users;
         return seedProduct(productData);
     })
-    .then(function(){
-         return seedCart(cartData)
+    .then(function(products){
+          myProducts = products
+        // console.log("products", products)
+         return seedCart()
      })
+    .then(function(carts){
+         return seedReviews()
+     })
+
     .then(function(){
-         console.log('Seeding successful')
+         console.log('Seeding successful!!')
     })
 
 
