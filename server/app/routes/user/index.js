@@ -195,7 +195,6 @@ router.put('/:id/cart', function(req, res, next) {
                 throw err;
             }
 
-            console.log('HERE 1',cart);
             // find location of each product from req.body.items in cart.items
             var itemIdx;
             var k;
@@ -203,7 +202,6 @@ router.put('/:id/cart', function(req, res, next) {
             for(var i = 0; i < req.body.items.length; i++) {
                 k = 0;
                 itemIdx = undefined;
-                console.log('HERE 2', req.body.items[i]);
 
                 while(itemIdx === undefined && k < cart.items.length) {
                     if(cart.items[k].product === req.body.items[i].product) {
@@ -219,26 +217,20 @@ router.put('/:id/cart', function(req, res, next) {
                 }
 
                 if(req.body.items[i].quantity !== 0) {
-                    console.log('HERE 3',req.body.items[i].quantity);
                     // set new item quantity to quantity in req.body.items
                     cart.items[itemIdx].quantity = req.body.items[i].quantity;
-                    console.log(cart.items[itemIdx].quantity);
                 } else {
-                    console.log('HERE 4',cart.items[itemIdx]);
                     // if new quantity is zero, delete item
                     cart.items.splice(itemIdx,1);
-                    console.log('HERE 7',cart.items);
                 }
             }
 
             return cart.save();
         })
         .then(function(cart) {
-            console.log('HERE 5',cart);
             return Cart.findById(cart._id).populate('items.product').exec();
         })
         .then(function(cart) {
-            console.log('HERE 6',cart);
             res.json(cart);
         })
         .then(null, next);
