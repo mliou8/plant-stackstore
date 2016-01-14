@@ -2,7 +2,6 @@
 var crypto = require('crypto');
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var Cart = mongoose.model('Cart');
 var random = require('mongoose-random');
 
 var schema = new mongoose.Schema({
@@ -47,7 +46,7 @@ schema.plugin(random, { path: 'r' }); // by default `path` is `random`. It's use
 
 
 // method to remove sensitive information from user objects before sending them out
-schema.methods.sanitize =  function () {
+schema.methods.sanitize = function () {
     return _.omit(this.toJSON(), ['password', 'salt']);
 };
 
