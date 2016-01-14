@@ -12,16 +12,6 @@ var request = require('supertest');
 var app = require('../../../server/app');
 
 
-// //Declare a helper function that gets category IDs
-// //based on name
-// function getCategoryID (name) {
-//     Category.findOne({name: name})
-//     .then(function(categories) {
-//       console.log(categories)
-//         return categories._id
-//     })
-// }
-
 describe('Categories API Routes', function () {
 
 	beforeEach('Establish DB connection', function (done) {
