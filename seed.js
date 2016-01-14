@@ -90,7 +90,7 @@ function seedCart () {
     var carts =[];
 
         for(i=0; i< myUsers.length ; i++){
-          carts[i] = {userID: myUsers[i]._id.toString(), items: [] };
+          carts[i] = {user: myUsers[i]._id.toString(), items: [] };
         }
 
 
@@ -155,7 +155,6 @@ function seedReviews () {
       reviewCount--
     }
       return Promise.all(promises)
-
 }
 
 //Promise.all to save all the different seeds
