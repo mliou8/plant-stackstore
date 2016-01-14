@@ -28,7 +28,10 @@ var schema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: [String]
+        type: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category'
+        }]
     }
 });
 

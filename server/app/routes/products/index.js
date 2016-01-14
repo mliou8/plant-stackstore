@@ -16,6 +16,7 @@ router.get('/', function(req, res, next){
 //route to get a single product matching an ID
 router.get('/:id', function(req, res, next){
 	Product.findOne({_id: req.params.id})
+	.populate('category')
 	.then(function(product){
 		res.json(product);
 	})
