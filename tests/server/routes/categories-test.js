@@ -79,26 +79,20 @@ describe('Categories API Routes', function () {
   });
 
   describe('Putting', function() {
-
-    var category = {
-      name: 'TestCategory'
-    };
-
+    var categoryID;
+    var category = {name: 'TestCategory'}
     beforeEach('Create a Category', function (done) {
-      Category.create({
-          name: 'TestCategory'
-        }
-      }).then(function (category) {
-          var id = category._id
+      Category.create(category)
+      .then(function (category) {
+        console.log("category ", category);
+          categoryID = String(category._id);
+          done();
       })
-      , done)
+    })
 
     it('should edit a category', function(done) {
       request(app)
-        .get('/api/categories/' + id)
-        .end(function(err, res) {
-          request(app)
-          .put('/api/categories/' + id)
+          .put('/api/categories/' + categoryID)
           .send({name:'NewCategory'})
           .expect(200)
           .end(function(err, res) {
@@ -107,30 +101,34 @@ describe('Categories API Routes', function () {
             expect(res.body.name).to.equal('NewCategory');
             done();
         });
-        })
-    });
+      })
+
+
   });
 
-//   describe('Deleting', function() {
-//     var category = {
-//       name: 'TestCategory'
-//     };
+  describe('Deleting', function() {
+    var categoryID;
+    var category = {name: 'TestCategory'}
+    beforeEach('Create a Category', function (done) {
+      Category.create(category)
+      .then(function (category) {
+        console.log("category ", category);
+          categoryID = String(category._id);
+          done();
+      })
+    })
 
-//     beforeEach('Create a Category', function (done) {
-//       Category.create(category, done);
-//     });
-
-//     it('should delete a category', function(done) {
-//       request(app)
-//         .delete('/api/categories/NewCategory')
-//         .expect(204)
-//         .end(function(err, res) {
-//           if (err) return done(err);
-//           expect(err).to.equal(null);
-//           expect(res.body.name).to.equal(undefined);
-//           done();
-//         });
-//     });
-//   });
+    it('should delete a category', function(done) {
+      request(app)
+        .delete('/api/categories/' + categoryID)
+        .expect(204)
+        .end(function(err, res) {
+          if (err) return done(err);
+          expect(err).to.equal(null);
+          expect(res.body.name).to.equal(undefined);
+          done();
+        });
+    });
+  });
 
 });
