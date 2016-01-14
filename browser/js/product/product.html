@@ -1,9 +1,27 @@
 <div>
+    <img ng-src={{product.photo[0]}} style="width:304px;height:228px;">
     <h3>{{ product.name }}</h3>
     <h5>${{ product.price }}</h5>
     <h5><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
     <h5>#{{ product._id }}</h5>
     <h5 ng-show="product.stock === 0">Out of stock.</h5>
     <h5 ng-show="product.stock > 0">{{ product.stock }} available</h5>
+    <h4>Reviews</h4>
+    <div class="row">
+        <div ng-repeat="review in reviews" class="col-xs-12">
+            <!-- <a class="thumbnail" ui-sref="product({productId: product._id})"> -->
+                <!-- <img ng-src="{{ album.imageUrl }}"> -->
+                <div class="caption">
+                    <h5>
+                        <span>{{review.user.name}}</span>
+                    </h5>
+                    <h6>
+                    	<span>Rating: {{review.rating}} /5</span>
+                    </h6>
+                    <p>{{review.text}}</p>
+                </div>
+            </a>
+        </div>
+    </div>
     <p><a ui-sref="products">Back to all products</a>
 </div>

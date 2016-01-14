@@ -46,20 +46,21 @@ var myUsers;
 function seedProduct (productData) {
   console.log("seeding products")
    var promises = []
+
         productData.forEach(function(product){
-            //console.log("foreach", product)
             for (i=0 ; i < product.category.length ; i++) {
                  var check = myCategories.filter(function(category){
+                                // if (category.name === "flowers"){
+                                // console.log("array cat", category.name)
+                                // console.log("prod cat", product.category[i])
+                                // console.log(category.name ===product.category[i])}
                                 return category.name === product.category[i]
                             })[0]._id
-                 //console.log("check", check)
                  product.category[i] = check;
-                promises.push(Product.create(product))
-
             }
+               promises.push(Product.create(product))
         })
 
-   // console.log("product promises", promises)
     return Promise.all(promises)
 }
 
@@ -113,9 +114,9 @@ function seedReviews () {
       var rating = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
       var productIndex = Math.floor(Math.random() * myProducts.length) ;
       var userIndex = Math.floor(Math.random() * myUsers.length) ;
-      var text = "LOREM IPSUM"
+      var text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sagittis euismod elit non vestibulum. Maecenas porta feugiat dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris sit amet sem id neque varius dapibus. Nunc varius lacinia tellus, a ultricies nibh volutpat a. Vivamus nulla metus, finibus vel fringilla nec, placerat id urna. Aliquam erat volutpat. Nam arcu massa, porta in nisi quis, scelerisque aliquet augue. Duis rutrum finibus elit, quis convallis tortor sagittis id. Praesent vitae luctus sem, volutpat tempus risus. Etiam quis ex metus. Cras id congue turpis. Mauris et massa dapibus, varius urna non, pharetra quam. Praesent tempor dui at ante suscipit tristique a a erat. Aenean ultrices sem eget libero molestie, quis pulvinar arcu pharetra. Nulla placerat ornare turpis eget tincidunt. Quisque imperdiet libero id dictum pretium. Aliquam arcu lectus, mattis quis erat sed, pellentesque ultrices arcu. Nam mauris lectus, molestie et turpis auctor, pellentesque gravida ipsum. Aliquam lobortis in odio in rutrum. Vestibulum justo nunc, molestie sit amet venenatis et, porttitor iaculis urna. Praesent et nunc placerat, tempor nunc in, ornare augue. Sed eget semper est, ut condimentum massa. Aenean a placerat mi. Morbi tellus enim, rutrum elementum neque a, egestas sollicitudin risus. Etiam id nibh vel neque malesuada interdum eget eget magna."
       var reviewData = { rating: rating,
-                          text: "LOREM IPSUM",
+                          text: text,
                           product: myProducts[productIndex]._id.toString(),
                           user:  myUsers[userIndex]._id
                         }
