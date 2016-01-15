@@ -41,18 +41,19 @@ describe('Products API Routes', function () {
     beforeEach('Create a Product', function (done) {
             Category.create(category)
             .then(function(category) {
-                return Product.create({
+              return Product.create({
 			        name: 'Bonsai',
 			        photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
 			        description: 'this is a bonsai tree it\'s pretty dope',
 			        price: '40.00',
 			        stock: '3',
 			        category: category._id
-			    })
-            done();
+			       })
+            .then(function (product) {
+              done();
             })
-            }, done)
-    });
+        })
+    })
 
     it('should get all products', function(done) {
       request(app)
@@ -67,8 +68,31 @@ describe('Products API Routes', function () {
           done();
         });
     });
+  });
 
   describe('Posting', function() {
+    var categoryID;
+    var categoryInfo = {
+         name: 'TestCategory'
+        };
+     beforeEach('Create a Product', function (done) {
+        Category.create(categoryInfo)
+        .then(function (category) {
+          categoryID = category._id
+          return Product.create({
+          name: 'Bonsai',
+          photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
+          description: 'this is a bonsai tree it\'s pretty dope',
+          price: '40.00',
+          stock: '3',
+          category: categoryID
+         })
+        })
+        .then(function(product) {
+            done();
+      })
+  })
+
     it('should create a product', function(done) {
       request(app)
         .post('/api/products')
@@ -79,7 +103,7 @@ describe('Products API Routes', function () {
         description: 'This is a bomping pillow tree. Scary!',
         price: '2000.00',
         stock: '3',
-        category: ['mythical', 'dangerous']
+        category: categoryID
       }
         )
         .expect(201)
@@ -91,49 +115,46 @@ describe('Products API Routes', function () {
         });
     });
   });
- // describe('Putting', function() {
 
- //      var product = {
- //        name: 'Bonsai Tree',
- //        photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
- //        description: 'this is a bonsai tree it\'s pretty dope',
- //        price: '40.00',
- //        stock: '3',
- //        category: ['tree', 'small']
- //    }
+ describe('Putting', function() {
 
- //    var product2 = {
- //        _id: "1234",
- //        name: 'Whomping Willow',
- //        photo: 'http://vignette2.wikia.nocookie.net/harrypotter/images/8/8e/Whomping_Willow_PA.jpg/revision/latest?cb=20100617193927',
- //        description: 'This is a whomping willow tree. Scary!',
- //        price: '3000.00',
- //        stock: '3',
- //        category: ['mythical', 'dangerous']
- //    }
+    var categoryID;
+    var productID;
+    var categoryInfo = {
+         name: 'TestCategory'
+        };
+     beforeEach('Create a Product', function (done) {
+        Category.create(categoryInfo)
+        .then(function (category) {
+          categoryID = category._id
+          return Product.create({
+          name: 'Bonsai',
+          photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
+          description: 'this is a bonsai tree it\'s pretty dope',
+          price: '40.00',
+          stock: '3',
+          category: categoryID
+         })
+         .then(function (product) {
+          productID = product._id
+          done();
+          })
+        })
+  })
 
- //    beforeEach('Create a Product', function (done) {
- //      Product.create(product2, done);
- //    });
-
-
- //    it('should edit a product', function(done) {
- //      request(app)
- //        .get('/api/product/1234')
- //        .end(function(err, res) {
- //          request(app)
- //          .put('/api/product/1234')
- //          .send({name:'NewProduct'})
- //          .expect(200)
- //          .end(function(err, res) {
- //            if (err) return done(err);
- //            expect(err).to.equal(null);
- //            expect(res.body.name).to.equal('NewProduct');
- //            done();
- //        });
- //        })
- //    });
- //  });
+    it('should edit a product', function(done) {
+      request(app)
+          .put('/api/product/' + productID)
+          .send({name: 'NewProduct', price: '35.00', stock: '5'})
+          .expect(200)
+          .end(function(err, res) {
+            if (err) return done(err);
+            expect(err).to.equal(null);
+            expect(res.body.name).to.equal('NewProduct');
+            done();
+        })
+    });
+  });
 
   // describe('Deleting', function() {
 
