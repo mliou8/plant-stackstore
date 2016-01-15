@@ -59,8 +59,8 @@ router.post('/', function(req, res, next){
 		})
 		created.save()
 		.then(function(){
-			res.json(created);
-		})			
+			res.status("201").json(created);
+		})
 	})
 	.then(null,next);
 })
@@ -78,7 +78,7 @@ router.put('/:id', function(req, res, next){
         return Product.findById(product._id);
     })
     .then(function(product) {
-        res.json(product);
+        res.status("200").json(product);
     })
     .then(null, next);
 })
