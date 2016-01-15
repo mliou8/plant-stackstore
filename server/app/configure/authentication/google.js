@@ -16,17 +16,19 @@ module.exports = function (app) {
     };
 
     var verifyCallback = function (accessToken, refreshToken, profile, done) {
-
+        console.log("verifyCallback")
         UserModel.findOne({ 'google.id': profile.id }).exec()
             .then(function (user) {
-
+                console.log("profile")
                 if (user) {
                     return user;
                 } else {
                     return UserModel.create({
                         google: {
                             id: profile.id
-                        }
+                        },
+                        email: profile.emails[0].value,
+                        name: profile.displayName
                     });
                 }
 
@@ -51,6 +53,7 @@ module.exports = function (app) {
     app.get('/auth/google/callback',
         passport.authenticate('google', { failureRedirect: '/login' }),
         function (req, res) {
+            console.log("I AM HERE")
             res.redirect('/');
         });
 
