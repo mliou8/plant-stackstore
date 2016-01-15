@@ -27,6 +27,7 @@ var Category = Promise.promisifyAll(mongoose.model('Category'));
 var User = Promise.promisifyAll(mongoose.model('User'));
 var Cart = Promise.promisifyAll(mongoose.model('Cart'));
 var Review = Promise.promisifyAll(mongoose.model('Review'));
+var Order = Promise.promisifyAll(mongoose.model('Order'));
 
 var categoryData =require('./server/seeds/categories.js')
 var productData =require('./server/seeds/products.js')
@@ -106,6 +107,35 @@ function seedCart () {
         return Promise.all(promises)
 }
 
+function seedOrders () {
+  console.log("seeding orders")
+   var promises = []
+    var orders =[];
+    var statuses = ['pending','completed','delivered','shipped']
+
+        for(i=0; i< myUsers.length ; i++){
+          orders[i] = {userID: myUsers[i]._id.toString(),
+                      products: [],
+                      status: statuses[Math.floor(Math.random() * (3 - 1 + 1)) + 1]
+           };
+        }
+
+
+       for (i = 0 ; i < orders.length; i++){
+           orders[i].products.push({
+              product: myProducts[i]._id,
+              quantity: Math.floor(Math.random() * (10 - 1 + 1)) + 1
+
+            });
+
+         console.log("order", orders[i])
+         promises.push(Order.create(orders[i]))
+
+       }
+
+        return Promise.all(promises)
+}
+
 function seedReviews () {
    var promises = []
    var reviewCount = 10;
@@ -129,7 +159,7 @@ function seedReviews () {
 
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
-        return Promise.all([Category.remove({}),Product.remove({}),User.remove({}),Cart.remove({}),Review.remove({})])
+        return Promise.all([Category.remove({}),Order.remove({}),Product.remove({}),User.remove({}),Cart.remove({}),Review.remove({})])
     })
     .then(function () {
         return seedCategories(categoryData);
@@ -150,7 +180,9 @@ connectToDb.then(function () {
     .then(function(carts){
          return seedReviews()
      })
-
+    .then(function(){
+         return seedOrders()
+     })
     .then(function(){
          console.log('Seeding successful!!')
     })

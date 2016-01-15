@@ -96,6 +96,7 @@
 
         this.logout = function () {
             return $http.get('/logout').then(function () {
+                console.log("IM LOGGING OUT");
                 Session.destroy();
                 $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
             });
