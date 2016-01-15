@@ -144,8 +144,8 @@ describe('Products API Routes', function () {
 
     it('should edit a product', function(done) {
       request(app)
-          .put('/api/product/' + productID)
-          .send({name: 'NewProduct', price: '35.00', stock: '5'})
+          .put('/api/products/' + productID)
+          .send({name: 'NewProduct'})
           .expect(200)
           .end(function(err, res) {
             if (err) return done(err);
@@ -156,34 +156,43 @@ describe('Products API Routes', function () {
     });
   });
 
-  // describe('Deleting', function() {
+  describe('Deleting', function() {
+    var categoryID;
+    var productID;
+    var categoryInfo = {
+         name: 'TestCategory'
+        };
+   beforeEach('Create a Product', function (done) {
+        Category.create(categoryInfo)
+        .then(function (category) {
+          categoryID = category._id
+          return Product.create({
+          name: 'Bonsai',
+          photo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
+          description: 'this is a bonsai tree it\'s pretty dope',
+          price: '40.00',
+          stock: '3',
+          category: categoryID
+         })
+         .then(function (product) {
+          productID = product._id
+          done();
+          })
+        })
+    })
 
-  //  var product2 = {
-  //       _id: "NYRe",
-  //       name: 'Whomping Willow',
-  //       photo: 'http://vignette2.wikia.nocookie.net/harrypotter/images/8/8e/Whomping_Willow_PA.jpg/revision/latest?cb=20100617193927',
-  //       description: 'This is a whomping willow tree. Scary!',
-  //       price: '3000.00',
-  //       stock: '3',
-  //       category: ['mythical', 'dangerous']
-  //   }
-
-  //   beforeEach('Create a Product', function (done) {
-  //     Product.create(product2, done);
-  //   });
-
-  //   it('should delete a Product', function(done) {
-  //     request(app)
-  //       .delete('/api/product/NYRe')
-  //       .expect(404)
-  //       .end(function(err, res) {
-  //         if (err) return done(err);
-  //         expect(err).to.equal(null);
-  //         expect(res.body.name).to.equal(undefined);
-  //         done();
-  //       });
-  //   });
-  // });
+    it('should delete a Product', function(done) {
+      request(app)
+        .delete('/api/product/' + productID)
+        .expect(404)
+        .end(function(err, res) {
+          if (err) return done(err);
+          expect(err).to.equal(null);
+          expect(res.body.name).to.equal(undefined);
+          done();
+        });
+    });
+  });
 
 
 });

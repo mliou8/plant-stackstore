@@ -25,6 +25,7 @@
 
 //   describe('Getting', function() {
 
+//   	//Will need to create products, and a user
 //     var order = {};
 
 //     beforeEach('Create a Product', function (done) {
