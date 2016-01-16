@@ -6,6 +6,20 @@ var User = mongoose.model('User');
 var Order = mongoose.model('Order');
 var Cart = mongoose.model('Cart');
 var Product = mongoose.model('Product');
+var bodyParser = require('body-parser');
+// Requires multiparty
+var multiparty = require('connect-multiparty');
+var multipartyMiddleware = multiparty();
+
+// Requires controller
+var UserController = require('./UserController');
+// create application/json parser
+var jsonParser = bodyParser.json()
+
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
 
 router.get('/', function(req, res, next) {
     User.find().exec()
@@ -16,7 +30,10 @@ router.get('/', function(req, res, next) {
         .then(null, next);
 });
 
-router.post('/', function(req, res, next) {
+router.post('/api/user/uploads', multipartyMiddleware, UserController.uploadFile);
+
+router.post('/', jsonParser, function(req, res,  next) {
+    console.log("trying to post to user", req)
     User
         .create(req.body)
         .then(function(user) {
@@ -61,7 +78,7 @@ router.put('/:id', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             for(var key in req.body) {
                 // don't let users set themselves as admins
                 if(key !== 'admin') {
@@ -119,7 +136,7 @@ router.get('/:id/cart', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             res.json(cart);
         })
         .then(null, next);

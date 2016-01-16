@@ -19,6 +19,34 @@ body {
   margin: 0 auto;
 }
 
+  #blank-avatar {
+    opacity: 0.4;
+  }
+
+    #profile-preview {
+    vertical-align: middle;
+  }
+
+  .fill {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    height: 30%;
+    padding-bottom: 50px;
+
+;
+}
+.fill img {
+    flex-shrink:0;
+    min-width:100%;
+    min-height:100%
+
+}
+
 @import 'directives/main';
 @import 'home/main';
 @import 'about/main';
