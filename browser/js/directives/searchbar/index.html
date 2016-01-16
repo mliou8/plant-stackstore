@@ -1,68 +1,35 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Search Box Example 1</title>
-<style type="text/css">
 
-  #tfnewsearch{
-    float:left;
-    padding:20px;
+<head>
+<style>
+  .search-bar {
+    padding-bottom: 40px;
   }
-  .tftextinput{
-    margin: 0;
-    padding: 5px 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size:14px;
-    border:1px solid #0076a3; border-right:0px;
-    border-top-left-radius: 5px 5px;
-    border-bottom-left-radius: 5px 5px;
-  }
-  .tfbutton {
-    margin: 0;
-    padding: 5px 15px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size:14px;
-    outline: none;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    color: #ffffff;
-    border: solid 1px #0076a3; border-right:0px;
-    background: #0095cd;
-    background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
-    background: -moz-linear-gradient(top,  #00adee,  #0078a5);
-    border-top-right-radius: 5px 5px;
-    border-bottom-right-radius: 5px 5px;
-  }
-  .tfbutton:hover {
-    text-decoration: none;
-    background: #007ead;
-    background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
-    background: -moz-linear-gradient(top,  #0095cc,  #00678e);
-  }
-  /* Fixes submit button height problem in Firefox */
-  .tfbutton::-moz-focus-inner {
-    border: 0;
-  }
-  .tfclear{
-    clear:both;
+  @media (max-width: 980px) {
+    .search-bar {
+      padding-top: 0;
+    }
   }
 </style>
-</head>
-
-
+<head>
 <body>
-  <div id="tfheader">
 
-    <form id="tfnewsearch" name="productsearch" ng-submit="getText()">
-
-          <input type="text" class="tftextinput" ng-model="searchInput" name="search" size="21" maxlength="120">
-
-          <input type="submit" value="Search" class="tfbutton">
-    </form>
-  <div class="tfclear"></div>
-
-  </div>
+<div class="row search-bar">
+ <div class="col-md-5">
+    <div class="input-group">
+      <input type="text" class="form-control" aria-label="..." ng-model="searchInput">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a href="#">Test</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
 </body>
-</html>
+
 
