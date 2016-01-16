@@ -7,12 +7,29 @@ app.config(function ($stateProvider) {
             allProducts: function(ProductFactory) {
                 return ProductFactory.fetchAll();
             }
+            // },
+            // searchDB: function(SearchFactory) {
+            //     return SearchFactory.searchDB();
+            // }
         }
     });
 });
 
-app.controller('ProductsCtrl', function($scope, allProducts) {
+app.controller('ProductsCtrl', function($scope, allProducts, ProductFactory) {
     $scope.products = allProducts;
+
+    $scope.filterFunc = function (data) {
+
+    }
+
+    $scope.criteriaMatch = function( criteria ) {
+        ProductFactory.fetchAll().
+        then(function () {
+            return function( item ) {
+                return item.name === criteria.name;
+            };
+        })
+    };
 });
 
 app.factory('ProductFactory', function($http) {
@@ -23,7 +40,6 @@ app.factory('ProductFactory', function($http) {
                     return response.data;
                 });
         },
-
         fetchById: function(id) {
             return $http.get('/api/products/' + id)
                 .then(function(response) {
@@ -36,5 +52,26 @@ app.factory('ProductFactory', function($http) {
                 return response.data;
             });
         }
+        // getallProducts: function (name) {
+        //     return $http.post('api/products', name)
+        // }
+
     }
 });
+
+// app.factory('SearchFactory', function ($http) {
+//     return {
+//         //Returns an array with all products names
+//         //passed in as strings. Serves as the "database"
+//         searchDB: function (searchStr) {
+//             var results = [];
+//             return $http.post('api/products')
+//             .then(function (response) {
+//                 response.forEach(function (data) {
+//                     results.push(data.name)
+//                 })
+//                 console.log(results);
+//             })
+//         }
+//     }
+// })

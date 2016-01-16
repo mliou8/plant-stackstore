@@ -1,7 +1,7 @@
 <div>
     <h3>Products</h3>
-    <div class="row">
-        <div ng-repeat="product in products" class="col-xs-4">
+            <searchbar> </searchbar>
+        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4">
             <a class="thumbnail" ui-sref="product({productId: product._id})">
                 <!-- <img ng-src="{{ album.imageUrl }}"> -->
                 <div class="caption">
