@@ -1,0 +1,24 @@
+<h3>Cart for {{ username }}</h3>
+<div>
+    <form name="cart-update" novalidate ng-submit="updateCart()">
+        <fieldset>
+            <table>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+                <tr ng-repeat="item in cart">
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price | currency:"$" }}</td>
+                    <td><select name="quantity" ng-options="n for n in [] | range:0:item.product.stock" ng-model="item.quantity"></select></td>
+                </tr>
+                <tr>
+                    <td><strong>Total<strong></td>
+                    <td>{{ total | currency:"$" }}</td>
+                </tr>
+            </table>
+            <button type="submit">Update Cart</button>
+        </fieldset>
+    </form>
+</div>

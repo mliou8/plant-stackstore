@@ -23,7 +23,6 @@ app.factory('ProductFactory', function($http) {
                     return response.data;
                 });
         },
-
         fetchById: function(id) {
             return $http.get('/api/products/' + id)
                 .then(function(response) {
@@ -35,6 +34,13 @@ app.factory('ProductFactory', function($http) {
             .then(function(response){
                 return response.data;
             });
+        },
+        quantityRange: function(start, end) {
+            var result = [];
+            for(var i = start; i <= end && i <= 30; i++) {
+                result.push(i);
+            }
+            return result;
         }
     }
 });

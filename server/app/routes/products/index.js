@@ -14,6 +14,25 @@ router.get('/', function(req, res, next){
 	.then(null, next);
 })
 
+router.post('/cartlookup', function(req, res, next) {
+	var promiseArr = req.body.items.map(function(item) {
+		return Product.findById(item.product).exec();
+	});
+	Promise.all(promiseArr)
+		.then(function(products) {
+			for(var i = 0; i < products.length; i++) {
+				if(!products[i]) {
+					var err = new Error('Product #'+req.body.items[i].product+' not found');
+					err.status = 404;
+					throw err;
+				}
+			}
+
+			res.json({ items: products });
+		})
+		.then(null, next);
+})
+
 //route to get a single product matching an ID
 router.get('/:id', function(req, res, next){
 	Product.findOne({_id: req.params.id})

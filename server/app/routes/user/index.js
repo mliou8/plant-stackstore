@@ -71,7 +71,7 @@ router.put('/:id', function(req, res, next) {
             return user.save();
         })
         .then(function(user) {
-            return User.findById(user._id);
+            return User.findById(user._id).exec();
         })
         .then(function(user) {
             res.json(user);
@@ -136,40 +136,49 @@ router.post('/:id/cart', function(req, res, next) {
                 throw err;
             }
             // search for product to validate
-            var product = Product.findById(req.body.product);
-            return Promise.all([cart, product]);
+            var promiseArr = [cart];
+            for(var i = 0; i < req.body.items.length; i++) {
+                promiseArr.push(Product.findById(req.body.items[i].product).exec());
+            }
+
+            return Promise.all(promiseArr);
         })
         .then(function(result) {
             var cart = result[0];
-            var product = result[1];
 
-            // validate product
-            if(!product) {
-                var err = new Error('Product #'+req.body.product+' not found');
-                err.status = 404;
-                throw err;
+            // validate products
+            for(var i = 1; i < result.length; i++) {
+                if(!result[i]) {
+                    var err = new Error('Product #'+req.body.items[i-1].product+' not found');
+                    err.status = 404;
+                    throw err;
+                }
             }
 
             //check whether added product is already in cart
             var itemIdx;
-            var i = 0;
+            var k;
 
-            while(itemIdx === undefined && i < cart.items.length) {
-                if(cart.items[i].product === product._id) {
-                    itemIdx = i;
+            for(i = 0; i < req.body.items.length; i++) {
+                k = 0;
+                itemIdx = undefined;
+
+                while(itemIdx === undefined && k < cart.items.length) {
+                    if(cart.items[k].product === req.body.items[i].product) {
+                        itemIdx = k;
+                    }
+                    k++;
                 }
-                i++;
-            }
 
-            if(itemIdx !== undefined) {
-                // if item is already present in cart, add new quantity to quantity in cart (or add 1 if no quantity specified)
-                cart.items[itemIdx].quantity += req.body.quantity ? +req.body.quantity : 1;
-            } else {
-                // if item is not present in cart, push item id & quanitity
-                cart.items.push({
-                    product: product._id,
-                    quantity: req.body.quantity ? +req.body.quantity : 1
-                });
+                if(itemIdx === undefined) {
+                    cart.items.push(req.body.items[i]);
+                } else if(req.body.items[i].quantity >= 0) {
+                   cart.items[itemIdx].quantity += +req.body.items[i].quantity;
+                } else {
+                    err = new Error('Invalid quantity '+req.body.items[i].quantity+' for product #'+req.body.items[i].product);
+                    err.status = 400;
+                    throw err;
+                }
             }
 
             return cart.save();
@@ -188,19 +197,40 @@ router.post('/:id/cart', function(req, res, next) {
 })
 
 router.put('/:id/cart', function(req, res, next) {
-    Cart.findOne({ user: req.params.id }).exec()
+    Cart
+        .findOne({ user: req.params.id })
         .then(function(cart) {
+            // validate cart
             if(!cart) {
                 var err = new Error('Cart for user #'+req.params.id+' not found');
                 err.status = 404;
                 throw err;
             }
+            // search for product to validate
+            var promiseArr = [cart];
+            for(var i = 0; i < req.body.items.length; i++) {
+                promiseArr.push(Product.findById(req.body.items[i].product).exec());
+            }
 
-            // find location of each product from req.body.items in cart.items
+            return Promise.all(promiseArr);
+        })
+        .then(function(result) {
+            var cart = result[0];
+
+            // validate products
+            for(var i = 1; i < result.length; i++) {
+                if(!result[i]) {
+                    var err = new Error('Product #'+req.body.items[i-1].product+' not found');
+                    err.status = 404;
+                    throw err;
+                }
+            }
+
+            //check whether added product is already in cart
             var itemIdx;
             var k;
 
-            for(var i = 0; i < req.body.items.length; i++) {
+            for(i = 0; i < req.body.items.length; i++) {
                 k = 0;
                 itemIdx = undefined;
 
@@ -208,53 +238,50 @@ router.put('/:id/cart', function(req, res, next) {
                     if(cart.items[k].product === req.body.items[i].product) {
                         itemIdx = k;
                     }
+                    k++;
                 }
 
-                // if product is not found in cart, throw error without saving cart
                 if(itemIdx === undefined) {
-                    var err = new Error('Item #'+req.body.items[i].product+'is not in cart');
-                    err.status = 404;
-                    throw err;
-                }
-
-                if(req.body.items[i].quantity !== 0) {
-                    // set new item quantity to quantity in req.body.items
-                    cart.items[itemIdx].quantity = req.body.items[i].quantity;
+                    cart.items.push(req.body.items[i]);
                 } else {
-                    // if new quantity is zero, delete item
-                    cart.items.splice(itemIdx,1);
+                    if(req.body.items[i].quantity > 0) {
+                        // set new item quantity to quantity in req.body.items
+                        cart.items[itemIdx].quantity = req.body.items[i].quantity;
+                    } else if(req.body.items[i].quantity === 0) {
+                        // if new quantity is zero, delete item
+                        cart.items.splice(itemIdx,1);
+                    } else {
+                        err = new Error('Invalid quantity '+req.body.items[i].quantity+' for product #'+req.body.items[i].product);
+                        err.status = 400;
+                        throw err;
+                    }
                 }
             }
 
             return cart.save();
         })
         .then(function(cart) {
-            return Cart.findById(cart._id).populate('items.product').exec();
+            // find updated cart
+            return Cart
+                .findById(cart._id)
+                .populate('items.product')
+                .exec();
         })
         .then(function(cart) {
-            res.json(cart);
+            res.status(201).json(cart);
         })
         .then(null, next);
 });
 
 router.delete('/:id/cart', function(req, res, next) {
-    Cart.remove({ user: req.params.id })
-        .then(function(info) {
-            return User.findById(req.params.id);
-        })
-        .then(function(user) {
-            if(!user) {
-                var err = new Error('User #'+req.params.id+' associated with cart does not exist');
+    Cart.findOneAndUpdate({ user: req.params.id },{ items: [] }, { new: true })
+        .then(function(cart) {
+            if(!cart) {
+                var err = new Error('Cart for user #'+req.params.id+' not found');
                 err.status = 404;
                 throw err;
             }
-
-            // if there's a user, that user should hav a cart
-            // deleting a cart will remove the exisiting cart
-            //   and create a fresh one associated with the user
-            return Cart.create({ user: user._id });
-        })
-        .then(function(cart) {
+            
             res.json(cart);
         })
        .then(null, next);

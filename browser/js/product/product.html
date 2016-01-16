@@ -11,7 +11,7 @@
             <fieldset>
                 <div>
                     <label for="quantity">Qty</label>
-                    <select name="quantity" ng-options="n.val as n.name for n in quantities" ng-model="amount"></select>
+                    <select name="quantity" ng-options="n for n in [] | range:1:product.stock" ng-model="amount"></select>
                 </div>
                 <div>
                     <button type="submit">Add To Cart</button>
@@ -22,18 +22,15 @@
     <h4>Reviews</h4>
     <div class="row">
         <div ng-repeat="review in reviews" class="col-xs-12">
-            <!-- <a class="thumbnail" ui-sref="product({productId: product._id})"> -->
-                <!-- <img ng-src="{{ album.imageUrl }}"> -->
-                <div class="caption">
-                    <h5>
-                        <span>{{review.user.name}}</span>
-                    </h5>
-                    <h6>
-                    	<span>Rating: {{review.rating}} /5</span>
-                    </h6>
-                    <p>{{review.text}}</p>
-                </div>
-            </a>
+            <div class="caption">
+                <h5>
+                    <span>{{review.user.name}}</span>
+                </h5>
+                <h6>
+                	<span>Rating: {{review.rating}} /5</span>
+                </h6>
+                <p>{{review.text}}</p>
+            </div>
         </div>
     </div>
     <p><a ui-sref="products">Back to all products</a>

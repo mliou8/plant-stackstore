@@ -17,23 +17,18 @@ app.config(function($stateProvider) {
     });
 });
 
-app.controller('ProductCtrl', function($scope, product, reviews) {
+app.controller('ProductCtrl', function($scope, CartFactory, ProductFactory, product, reviews, user) {
     $scope.product = product;
     $scope.reviews = reviews;
-    var range = function(start,end) {
-        var result = [];
-        for(var i = start; i <= end && i <= 30; i++) {
-            result.push({
-                name:i,
-                val:i
-            });
-        }
-        return result;
-    }
-    $scope.quantities = range(1,product.stock);
+    $scope.username = user ? user.name : 'guest';
     $scope.amount = 1;
 
     $scope.addToCart = function() {
-        console.log($scope.amount,$scope.product._id);
+        console.log($scope.product._id,$scope.amount);
+        if(user) {
+            CartFactory.addToServerCart($scope.product._id,$scope.amount);
+        } else {
+            CartFactory.addToLocalCart($scope.product._id,$scope.amount);
+        }
     }
-})
+});
