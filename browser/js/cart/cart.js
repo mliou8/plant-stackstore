@@ -20,14 +20,14 @@ app.config(function($stateProvider) {
 
 app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, user) {
     $scope.username = user ? user.name : 'guest';
-    $scope.cart = cart.items;
+    $scope.cart = cart;
     $scope.total = CartFactory.totalCartPrice($scope.cart);
 
     $scope.updateCart = function() {
         if(user !== null) {
             CartFactory.updateServerCart($scope.cart, user._id)
                 .then(function(cart) {
-                    $scope.cart = cart.items;
+                    $scope.cart = cart;
                     $scope.total = CartFactory.totalCartPrice($scope.cart);
                 });
         } else {
@@ -58,7 +58,7 @@ app.factory('CartFactory', function($http) {
         getServerCart: function(user) {
             return $http.get('/api/user/'+user+'/cart')
                 .then(function(res) {
-                    return res.data;
+                    return res.data.items;
                 })
         },
         addToLocalCart: function(product, quantity) {
@@ -124,11 +124,10 @@ app.factory('CartFactory', function($http) {
                 }
             })
                 .then(function(res) {
-                    return res.data;
+                    return res.data.items;
                 });
         },
         totalCartPrice: function(cart) {
-            console.log(cart);
             return cart.reduce(function(prev,cur) {
                 return prev+(cur.product.price*cur.quantity);
             },0);
