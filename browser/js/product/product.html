@@ -24,20 +24,21 @@
         </div>
     </div>
 
-<button class="btn btn-primary" ng-click="showButton=false" ng-show="showButton">Write Review</button>
-<div ng-show="!showButton">
-
-<div class="form-group" ng-submit="submit()">
- <form ng-submit="submit()">
-  <label for="submit">Submit Your Review:</label>
-  <uib-rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-  <textarea ng-model="text" class="form-control" rows="5" id="submit"></textarea>
-  <input type="submit" id="submit" value="Submit" />
-   <pre>list={{list}}</pre>
-   <pre>rating={{rate}}</pre>
-</form>
+<button class="btn btn-primary" ng-click="showButton=false" ng-show="showButton && user">Write Review</button>
+<div ng-show="!showButton && !formSubmitted">
+	<div class="form-group" ng-submit="submit()">
+		<form>
+		<label for="submit">Submit Your Review:</label>
+		<uib-rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+		<textarea ng-model="text" class="form-control" rows="5" id="submit"></textarea>
+		<input type="submit" id="submit" value="Submit" />
+<!-- 		<pre>list={{list}}</pre>
+		<pre>rating={{rate}}</pre> -->
+		</form>
+	</div>
 </div>
-    
+<div ng-show="formSubmitted">
+	<h4>Review Submitted!</h4>
 </div>
     <p><a ui-sref="products">Back to all products</a>
 </div>
