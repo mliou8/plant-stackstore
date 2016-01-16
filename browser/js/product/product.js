@@ -26,7 +26,7 @@ app.controller('ProductCtrl', function($scope, CartFactory, ProductFactory, prod
     $scope.addToCart = function() {
         console.log($scope.product._id,$scope.amount);
         if(user) {
-            CartFactory.addToServerCart($scope.product._id,$scope.amount);
+            CartFactory.addToServerCart($scope.product._id,$scope.amount,user._id);
         } else {
             CartFactory.addToLocalCart($scope.product._id,$scope.amount);
         }

@@ -113,6 +113,7 @@ router.get('/:id/cart', function(req, res, next) {
     Cart
         .findOne({ user: req.params.id })
         .populate('items.product')
+        .exec()
         .then(function(cart) {
             if(!cart) {
                 var err = new Error('Cart for '+req.params.id+' not found');

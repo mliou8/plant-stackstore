@@ -9,7 +9,7 @@ app.config(function($stateProvider) {
             },
             cart: function(user, CartFactory) {
                 if(user !== null) {
-                    return CartFactory.getServerCart(user);
+                    return CartFactory.getServerCart(user._id);
                 } else {
                     return CartFactory.getLocalCart();
                 }
@@ -20,14 +20,14 @@ app.config(function($stateProvider) {
 
 app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, user) {
     $scope.username = user ? user.name : 'guest';
-    $scope.cart = cart;
-    $scope.total = CartFactory.totalCartPrice(cart);
+    $scope.cart = cart.items;
+    $scope.total = CartFactory.totalCartPrice($scope.cart);
 
     $scope.updateCart = function() {
         if(user !== null) {
             CartFactory.updateServerCart($scope.cart, user._id)
                 .then(function(cart) {
-                    $scope.cart = cart;
+                    $scope.cart = cart.items;
                     $scope.total = CartFactory.totalCartPrice($scope.cart);
                 });
         } else {
@@ -90,8 +90,10 @@ app.factory('CartFactory', function($http) {
         },
         addToServerCart: function(product, quantity, user) {
             return $http.post('/api/user/'+user+'/cart', {
-                product: product,
-                quantity: quantity
+                items: [{
+                    product: product,
+                    quantity: quantity
+                }]
             })
                 .then(function(res) {
                     return res.data;
@@ -126,6 +128,7 @@ app.factory('CartFactory', function($http) {
                 });
         },
         totalCartPrice: function(cart) {
+            console.log(cart);
             return cart.reduce(function(prev,cur) {
                 return prev+(cur.product.price*cur.quantity);
             },0);
