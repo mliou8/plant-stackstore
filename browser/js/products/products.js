@@ -51,6 +51,12 @@ app.factory('ProductFactory', function($http) {
             .then(function(response){
                 return response.data;
             });
+        },
+        createReview: function(data) {
+            return $http.post('api/review', data)
+            .then(function(response){
+                return response.data;
+            })
         }
         // getallProducts: function (name) {
         //     return $http.post('api/products', name)
