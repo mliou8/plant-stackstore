@@ -1,14 +1,14 @@
 <div>
     <h3>Products</h3>
             <searchbar> </searchbar>
-        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview" >
+        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview">
             <a class="thumbnail" ui-sref="product({productId: product._id})">
                 <!-- <img ng-src="{{ album.imageUrl }}"> -->
                 <div class="caption">
                     <h5>
-                        <span> <img ng-src={{product.photo[0]}} style="width:150px;height:114px;">
+                        <span> <img ng-src={{product.photo[0]}}>
                        </span>
-                        <span>{{ product.name }}</span>
+                        <span class="product-name">{{ product.name }}</span>
                     </h5>
                     <h5 ng-show="product.stock === 0">Out of stock.</h5>
                 </div>
