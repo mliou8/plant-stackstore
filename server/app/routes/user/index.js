@@ -7,15 +7,7 @@ var Order = mongoose.model('Order');
 var Cart = mongoose.model('Cart');
 var Product = mongoose.model('Product');
 var bodyParser = require('body-parser');
-
-
-// Requires controller
-var UserController = require('./UserController');
-// create application/json parser
 var jsonParser = bodyParser.json()
-
-
-// create application/x-www-form-urlencoded parser
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 

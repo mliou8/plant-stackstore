@@ -17,10 +17,7 @@ app.factory('RegisterFactory', function($http) {
                 return response.data
             })
     }
-
-
     return RegisterFactory;
-
 })
 
 app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFactory ) {
@@ -52,7 +49,6 @@ app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFa
         }).catch(function () {
             $scope.error = 'Invalid registration credentials.';
         });
-
     };
 
         $scope.registerSubmit = function() {
@@ -62,12 +58,7 @@ app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFa
                     console.log("user back", user)
                     $scope.loginUser({email: user.user.email, password: $scope.userInfo.password})
                 })
-
         };
-
-
-
-
 });
 
 app.directive('errSrc', function() {
