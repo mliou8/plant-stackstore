@@ -43,11 +43,11 @@ app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFa
       } else { $scope.badPic = false}
     });
 
-    $scope.registerUser = function (userInfo) {
+    $scope.loginUser = function (userInfo) {
 
         $scope.error = null;
         console.log("new info", userInfo)
-        AuthService.register(userInfo).then(function () {
+        AuthService.login(userInfo).then(function () {
             $state.go('user');
         }).catch(function () {
             $scope.error = 'Invalid registration credentials.';
@@ -60,7 +60,7 @@ app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFa
             RegisterFactory.addUser($scope.userInfo)
                 .then(function(user) {
                     console.log("user back", user)
-                    $scope.registerUser({email: user.user.email, password: $scope.userInfo.password})
+                    $scope.loginUser({email: user.user.email, password: $scope.userInfo.password})
                 })
 
         };
