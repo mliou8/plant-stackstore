@@ -25,7 +25,7 @@ router.get('/:id', function(req, res, next){
 })
 
 //route to get the reviews of a single product matching an ID
-router.get('/:id/reviews', function(req,res,next){
+router.get('/reviews/:id', function(req,res,next){
 	Product.findOne({_id: req.params.id})
 	.then(function(foundProduct){
 		Review.find({product: foundProduct._id})

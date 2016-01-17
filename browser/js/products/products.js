@@ -6,30 +6,30 @@ app.config(function ($stateProvider) {
         resolve: {
             allProducts: function(ProductFactory) {
                 return ProductFactory.fetchAll();
+            },
+            allReviews: function(ProductFactory) {
+                return ProductFactory.fetchAllReviews();
             }
-            // },
-            // searchDB: function(SearchFactory) {
-            //     return SearchFactory.searchDB();
-            // }
         }
     });
 });
 
-app.controller('ProductsCtrl', function($scope, allProducts, ProductFactory) {
-    $scope.products = allProducts;
+app.controller('ProductsCtrl', function($scope, allProducts, ProductFactory, allReviews) {
+    //Returns the products scope object and maps onto it
+    //two new properties. The average of the reviews, and how many there are
 
-    $scope.filterFunc = function (data) {
-
-    }
-
-    $scope.criteriaMatch = function( criteria ) {
-        ProductFactory.fetchAll().
-        then(function () {
-            return function( item ) {
-                return item.name === criteria.name;
-            };
+    $scope.products = allProducts.map(function (product) {
+        product.reviews = allReviews.filter(function (review) {
+            return review.product._id === product._id
         })
-    };
+        var sum = 0;
+        product.reviewLength = product.reviews.length;
+        product.reviews.forEach(function (review) {
+            sum = sum + review.rating
+        })
+        product.average = Math.floor((sum) / (product.reviewLength));
+        return product;
+    })
 });
 
 app.factory('ProductFactory', function($http) {
@@ -46,38 +46,23 @@ app.factory('ProductFactory', function($http) {
                     return response.data;
                 });
         },
-        fetchReviewsById: function(id) {
-            return $http.get('api/products/' + id + '/reviews')
-            .then(function(response){
-                return response.data;
-            });
-        },
         createReview: function(data) {
             return $http.post('api/review', data)
             .then(function(response){
                 return response.data;
             })
+        },
+        fetchReviewsById: function(id) {
+            return $http.get('api/products/reviews/' + id)
+            .then(function(response){
+                return response.data;
+            });
+        },
+        fetchAllReviews: function() {
+            return $http.get('api/review')
+            .then (function (response) {
+                return response.data;
+            });
         }
-        // getallProducts: function (name) {
-        //     return $http.post('api/products', name)
-        // }
-
     }
-});
-
-// app.factory('SearchFactory', function ($http) {
-//     return {
-//         //Returns an array with all products names
-//         //passed in as strings. Serves as the "database"
-//         searchDB: function (searchStr) {
-//             var results = [];
-//             return $http.post('api/products')
-//             .then(function (response) {
-//                 response.forEach(function (data) {
-//                     results.push(data.name)
-//                 })
-//                 console.log(results);
-//             })
-//         }
-//     }
-// })
+})
