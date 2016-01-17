@@ -60,7 +60,7 @@ router.post('/', function(req, res, next){
 		created.save()
 		.then(function(){
 			res.json(created);
-		})			
+		})
 	})
 	.then(null,next);
 })

@@ -61,7 +61,7 @@ router.put('/:id', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             for(var key in req.body) {
                 // don't let users set themselves as admins
                 if(key !== 'admin') {
@@ -119,7 +119,7 @@ router.get('/:id/cart', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             res.json(cart);
         })
         .then(null, next);

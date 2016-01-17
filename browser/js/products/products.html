@@ -1,12 +1,37 @@
 <div>
     <h3>Products</h3>
-    <div class="row">
-        <div ng-repeat="product in products" class="col-xs-4">
+            <searchbar> </searchbar>
+<<<<<<< Updated upstream
+        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4">
+||||||| merged common ancestors
+        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview">
+=======
+        <div ng-repeat="product in products | filter: searchInput" class="col-xs-4 product-overview">
+>>>>>>> Stashed changes
             <a class="thumbnail" ui-sref="product({productId: product._id})">
                 <!-- <img ng-src="{{ album.imageUrl }}"> -->
                 <div class="caption">
                     <h5>
+<<<<<<< Updated upstream
                         <span>{{ product.name }}</span>
+||||||| merged common ancestors
+                        <span> <img ng-src={{product.photo[0]}}>
+                       </span>
+                        <span class="product-name">{{ product.name }}</span>
+                        <br>
+                        # of Reviews: {{product.reviewLength}}
+                        <br>
+                        <uib-rating ng-model="product.average" max="5" readonly="true" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+
+=======
+                        <span> <img ng-src={{product.photo[0]}}>
+                       </span>
+                        <span class="product-name">{{ product.name }}</span>
+                        <br>
+                        # of Reviews: {{product.reviewLength}}
+                        <br>
+                        <uib-rating ng-model="product.average" max="5" readonly="true" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+>>>>>>> Stashed changes
                     </h5>
                     <h5 ng-show="product.stock === 0">Out of stock.</h5>
                 </div>
