@@ -30,6 +30,7 @@ app.controller('ProductsCtrl', function($scope, allProducts, ProductFactory, all
         product.average = Math.floor((sum) / (product.reviewLength));
         return product;
     })
+    console.log($scope.products);
 });
 
 app.factory('ProductFactory', function($http) {
