@@ -47,8 +47,21 @@ body {
 
 }
 
+#picError {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 20px;
+    color: red;
+}
+
+
 @import 'directives/main';
 @import 'home/main';
 @import 'about/main';
 @import 'tutorial/main';
 @import 'login/main';
+@import 'social/bootstrap-social';

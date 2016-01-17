@@ -8,32 +8,47 @@ app.config(function ($stateProvider) {
 
 });
 
-app.controller('RegisterCtrl', function ($scope, AuthService, $state, Upload, $timeout) {
-
-     $scope.avatarID = "blank-avatar"
-     $scope.image_source = "https://s-media-cache-ak0.pinimg.com/236x/ee/1b/fc/ee1bfc6d80856df0a748bda63e69d4d4.jpg";
-
-     $scope.setFile = function(element) {
-        console.log("HERE")
-      $scope.currentFile = element.files[0];
-       var reader = new FileReader();
-
-      reader.onload = function(event) {
-        $scope.image_source = event.target.result
-        $scope.avatarID = "profile-preview"
-        $scope.$apply()
-
-      }
-      // when the file is read it triggers the onload event above.
-      reader.readAsDataURL(element.files[0]);
+app.factory('RegisterFactory', function($http) {
+    var RegisterFactory = {}
+    RegisterFactory.addUser = function(data){
+        return $http.post('api/user', {data: data})
+            .then(function(response){
+                console.log("REGISTERED USER")
+                return response.data
+            })
     }
+
+
+    return RegisterFactory;
+
+})
+
+app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFactory ) {
+
+    $scope.userInfo = { }
+     $scope.badPic = false;
+     $scope.avatarID = "blank-avatar"
+
+     $scope.image_source = $scope.userInfo.imageURL ? $scope.userInfo.imageURL : "https://s-media-cache-ak0.pinimg.com/236x/ee/1b/fc/ee1bfc6d80856df0a748bda63e69d4d4.jpg";
+
+    $scope.$watch('userInfo.imageURL', function(newValue, oldValue) {
+    console.log("CHANGE")
+      var picTest = (/\.gif$|\.jpg$|\.png$|\.gif$/)
+      var validPic = picTest.test(newValue) && newValue && newValue.length>0
+      $scope.image_source = validPic ? newValue : "https://s-media-cache-ak0.pinimg.com/236x/ee/1b/fc/ee1bfc6d80856df0a748bda63e69d4d4.jpg";
+      if (!validPic && newValue){
+        console.log("changing to bad")
+        $scope.badPic = true;
+        $scope.image_source = 'http://www.greenchu.de/sugimori/071.jpg'
+      } else { $scope.badPic = false}
+    });
 
     $scope.registerUser = function (userInfo) {
 
         $scope.error = null;
-
+        console.log("new info", userInfo)
         AuthService.register(userInfo).then(function () {
-            $state.go('home');
+            $state.go('user');
         }).catch(function () {
             $scope.error = 'Invalid registration credentials.';
         });
@@ -41,33 +56,33 @@ app.controller('RegisterCtrl', function ($scope, AuthService, $state, Upload, $t
     };
 
         $scope.registerSubmit = function() {
-            console.log("submitting")
-            console.log("valid", form.file.$valid)
-            console.log("file", $scope.file)
-          if ($scope.file) {
-            console.log("have valid file")
-            $scope.upload($scope.file);
-          }
+            console.log("user info", $scope.userInfo)
+            RegisterFactory.addUser($scope.userInfo)
+                .then(function(user) {
+                    console.log("user back", user)
+                    $scope.registerUser({email: user.user.email, password: $scope.userInfo.password})
+                })
+
         };
 
-        $scope.upload = function (file) {
-            console.log("trying to upload")
-        Upload.upload({
-            url: '/api/user/uploads',
-            method: 'POST',
-            headers: {
-                     'Content-Type': file.type
-            },
-            data: {file: file, 'username': $scope.username}
-        }).then(function (resp) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        }, function (resp) {
-            console.log('Error status: ' + resp.status);
-        }, function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
-    };
+
 
 
 });
+
+app.directive('errSrc', function() {
+  return {
+    link: function(scope, element, attrs) {
+      element.bind('error', function() {
+        if (attrs.src != attrs.errSrc) {
+          attrs.$set('src', attrs.errSrc);
+          scope.badPic = true;
+          scope.$digest()
+
+        }
+      });
+    }
+  }
+});
+
+

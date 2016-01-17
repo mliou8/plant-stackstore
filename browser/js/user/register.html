@@ -1,14 +1,20 @@
 <div class= "container">
 
     <div class="fill">
-        <img ng-src="{{image_source}}" class="img-thumbnail" ng-attr-id="{{ avatarID }}"/>
+        <img ng-src="{{image_source}}" alt="IMAGE NOT FOUND" err-src="http://www.greenchu.de/sugimori/071.jpg" class="img-thumbnail" ng-attr-id="{{ avatarID }}"/>
     </div>
+    <h3 id="picError" ng-show="badPic">Please Insert A Valid Photo</h3>
 
     <form id="register-form" name="form" ng-submit="registerSubmit()">
 
         <alert type="danger" ng-show="error">
             {{ error }}
         </alert>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ng-model="userInfo.name" class="form-control" id="name" placeholder="Name">
+        </div>
 
         <div class="form-group">
             <label for="email">Email*</label>
@@ -18,17 +24,12 @@
             <label for="login-password">Password*</label>
             <input type="password" ng-model="userInfo.password" class="form-control" id="login-password" placeholder="Password">
         </div>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" ng-model="userInfo.name" class="form-control" id="name" placeholder="Name">
-        </div>
+
         <div class="form-group">
             <label for="name">Profile Image</label>
-<!--             <input type="file" name="pic" ng-model="userInfo.imageURL" id="trigger" onchange="angular.element(this).scope().setFile(this)" accept="image/*" placeholder="Profile Photo" ngf-pattern="'image/*'">
-        </div> -->
-        <input type="file" ngf-select ng-model="file" name="file"
-             accept="image/*" onchange="angular.element(this).scope().setFile(this)" ngf-max-size="2MB" required
-             ngf-model-invalid="errorFiles">
+            <input type="text" name="pic" class="form-control" ng-model="userInfo.imageURL" placeholder="Profile Photo">
+        </div>
+
 
         <div class="form-group">
             <label for="name">Address</label>
