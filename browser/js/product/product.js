@@ -18,7 +18,7 @@ app.config(function($stateProvider) {
     });
 });
 
-app.controller('ProductCtrl', function($scope, reviews, product, user, ProductFactory, AuthService) {
+app.controller('ProductCtrl', function($scope, reviews, product, user, CartFactory, ProductFactory, AuthService) {
     $scope.product = product;
     $scope.reviews = reviews;
     $scope.user = user;
