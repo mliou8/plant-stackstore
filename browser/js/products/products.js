@@ -18,7 +18,7 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('ProductsCtrl', function($scope, allProducts, allCategories, ProductFactory, allReviews) {
-        //Returns the products scope object and maps onto it
+          //Returns the products scope object and maps onto it
           //two new properties. The average of the reviews, and how many there are
  $scope.products = allProducts.map(function (product) {
         product.reviews = allReviews.filter(function (review) {
