@@ -8,35 +8,21 @@ app.config(function($stateProvider) {
                 return ProductFactory.fetchById($stateParams.productId);
             },
             reviews: function(ProductFactory, $stateParams) {
+                console.log($stateParams.productId);
                 return ProductFactory.fetchReviewsById($stateParams.productId);
+            },
+            user: function(AuthService) {
+                return AuthService.getLoggedInUser();
             }
-            // currentUser: function(AuthService){
-            //     console.log("HERE")
-            //     return AuthService.getLoggedInUser();
-            // }
         }
     });
 });
 
-app.controller('ProductCtrl', function($scope, reviews, product, ProductFactory, AuthService, $stateParams) {
+app.controller('ProductCtrl', function($scope, reviews, product, user, ProductFactory, AuthService) {
     $scope.product = product;
-
-    ProductFactory.fetchReviewsById($stateParams.productId)
-    .then(function(reviews){
-        $scope.reviews=reviews;
-        // Keeping original review code here in case we want to use it
-        // var sum = 0;
-        // $scope.reviewsLength = reviews.length;
-        // reviews.forEach(function (data) {
-        //     sum = sum + data.rating
-        // })
-        // $scope.average = Math.floor(sum/($scope.reviewsLength));
-    })
-
-    AuthService.getLoggedInUser()
-    .then(function(currentUser){
-        $scope.user = currentUser;
-    })
+    $scope.reviews = reviews;
+    $scope.user = user;
+    $scope.amount = 1;
 
     //logic for making the button show and disappear
     $scope.showButton = true;
@@ -49,36 +35,39 @@ app.controller('ProductCtrl', function($scope, reviews, product, ProductFactory,
     $scope.max = 5;
     $scope.isReadonly = false;
 
+    $scope.addToCart = function() {
+        CartFactory.addToCart([{
+            product: $scope.product._id,
+            quantity: $scope.amount
+        }],user);
+    }
+
     $scope.hoveringOver = function(value) {
-    $scope.overStar = value;
+        $scope.overStar = value;
     };
 
     //logic for review submit form
     $scope.list = [];
-      $scope.text = 'Write your review here';
-      $scope.submit = function() {
-        // if ($scope.text) {
-        //   $scope.list.push(this.text);
-        //   $scope.text = '';
-        // }
-
-        $scope.submitObject = {};
-        $scope.submitObject.rating = $scope.rate;
-        $scope.submitObject.text = $scope.text;
-        $scope.submitObject.product = $scope.product;
-        $scope.submitObject.user = $scope.user._id;
+    $scope.text = '';
+    $scope.submit = function() {
+        var submitObject = {
+            rating: $scope.rate,
+            text: $scope.text,
+            product: $scope.product,
+            user: $scope.user._id
+        };
 
         ProductFactory
-        .createReview($scope.submitObject)
+        .createReview(submitObject)
         .then(function(review){
             $scope.list.push(review);
             $scope.text = '';
 
-            ProductFactory.fetchReviewsById($stateParams.productId)
+            ProductFactory.fetchReviewsById($scope.product._id)
             .then(function(reviews){
-            $scope.reviews=reviews;
-            $scope.formSubmitted = true;
+                $scope.reviews=reviews;
+                $scope.formSubmitted = true;
             })
         })
     }
-})
+});
