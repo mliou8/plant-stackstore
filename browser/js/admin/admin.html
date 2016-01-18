@@ -11,7 +11,9 @@
     </tr>
     <tr ng-repeat-start="order in orders">
         <td> {{order.userID.name}} </td>
-        <td> {{order.status}} </td>
+        <td> <a href="#" editable-select="user.status" e-ng-options="s.value as s.text for s in statusOptions">
+            {{ status }}
+        </a> </td>
         <td> {{order.date}} </td>
         <td> <button ng-click="toggleShow(order)"> Toggle Details </button> </td>
     </tr>

@@ -17,7 +17,16 @@ app.config(function ($stateProvider) {
 
 
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts) {
-
+	//Options for Status edit
+	  $scope.statusOptions = [
+	    {value: 1, text: 'status1'},
+	    {value: 2, text: 'status2'},
+	    {value: 3, text: 'status3'},
+	    {value: 4, text: 'status4'}
+	  ];
+	$scope.status = {
+	    status: 2
+  	};
 	$scope.orders = allOrders.map (function (order) {
 		order.productString = [];
 		order.products.forEach(function (product) {
@@ -72,3 +81,5 @@ app.factory('OrderFactory', function ($http) {
 		}
 	}
 })
+
+
