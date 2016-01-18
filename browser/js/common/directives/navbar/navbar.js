@@ -9,10 +9,10 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, 
                 console.log("cats", cats)
                 scope.categories = cats
                 scope.items = cats.map(function(cat){
-                    var navObj = { label: cat.name}
-                    return navObj
+                    return cat.name
                 })
-                console.log("new cats", scope.items)
+                scope.items.sort()
+                scope.categories = scope.items
 
 
 
