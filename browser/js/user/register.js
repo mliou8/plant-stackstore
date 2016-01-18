@@ -9,9 +9,14 @@ app.config(function ($stateProvider) {
 });
 
 app.factory('RegisterFactory', function($http) {
-    var RegisterFactory = {}
+    var RegisterFactory = {};
+    var cart = JSON.parse(localStorage.getItem('cart'));
+    if(cart === null) cart = [];
     RegisterFactory.addUser = function(data){
-        return $http.post('api/user', {data: data})
+        return $http.post('api/user', {
+          data: data,
+          cart: cart
+        })
             .then(function(response){
                 console.log("REGISTERED USER")
                 return response.data
@@ -20,7 +25,7 @@ app.factory('RegisterFactory', function($http) {
     return RegisterFactory;
 })
 
-app.controller('RegisterCtrl', function ($scope, AuthService, $state, RegisterFactory ) {
+app.controller('RegisterCtrl', function ($scope, AuthService, CartFactory, $state, RegisterFactory ) {
 
     $scope.userInfo = { }
      $scope.badPic = false;

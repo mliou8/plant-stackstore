@@ -3,8 +3,8 @@
    <div class="row">
    <h3> Orders </h3>
     <table class="col-xs-12" style="width:100%">
-    <tr ng-repeat-start="order in orders" ng-click="toggleShow()">
-        <td> {{order.userID}} </td>
+    <tr ng-repeat-start="order in orders">
+        <td> {{order.userID}} <button> </button> </td>
         <td> {{order.status}} </td>
         <td> {{order.date}} </td>
     </tr>

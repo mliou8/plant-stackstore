@@ -6,21 +6,31 @@
     <h5>#{{ product._id }}</h5>
     <h5 ng-show="product.stock === 0">Out of stock.</h5>
     <h5 ng-show="product.stock > 0">{{ product.stock }} available</h5>
+    <div>
+        <form name="order-form" novalidate ng-submit="addToCart()">
+            <fieldset>
+                <div>
+                    <label for="quantity">Qty</label>
+                    <select name="quantity" ng-options="n for n in [] | range:1:product.stock" ng-model="amount"></select>
+                </div>
+                <div>
+                    <button type="submit">Add To Cart</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
     <h4>Reviews</h4>
     <div class="row">
         <div ng-repeat="review in reviews" class="col-xs-12">
-            <!-- <a class="thumbnail" ui-sref="product({productId: product._id})"> -->
-                <!-- <img ng-src="{{ album.imageUrl }}"> -->
-                <div class="caption">
-                    <h5>
-                        <span>{{review.user.name}}</span>
-                    </h5>
-                    <h6>
-                    	<span>Rating: {{review.rating}} /5</span>
-                    </h6>
-                    <p>{{review.text}}</p>
-                </div>
-            </a>
+            <div class="caption">
+                <h5>
+                    <span>{{review.user.name}}</span>
+                </h5>
+                <h6>
+                	<span>Rating: {{review.rating}} /5</span>
+                </h6>
+                <p>{{review.text}}</p>
+            </div>
         </div>
     </div>
 
@@ -30,7 +40,7 @@
 		<form>
 		<label for="submit">Submit Your Review:</label>
 		<uib-rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-		<textarea ng-model="text" class="form-control" rows="5" id="submit"></textarea>
+		<textarea ng-model="text" class="form-control" rows="5" id="submit" placeholder="Write your review here" onfocus="this.placeholder=''" onblur="this.placeholder='Write your review here'"></textarea>
 		<input type="submit" id="submit" value="Submit" />
 		</form>
 	</div>
