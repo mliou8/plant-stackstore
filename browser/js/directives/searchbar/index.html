@@ -1,0 +1,35 @@
+
+<head>
+<style>
+  .search-bar {
+    padding-bottom: 40px;
+  }
+  @media (max-width: 980px) {
+    .search-bar {
+      padding-top: 0;
+    }
+  }
+</style>
+<head>
+<body>
+
+<div class="row search-bar">
+ <div class="col-md-5">
+    <div class="input-group">
+      <input type="text" class="form-control" aria-label="..." ng-model="searchInput">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a href="#">Test</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li>
+          <li role="separator" class="divider"></li>
+          <li><a href="#">Separated link</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+</div><!-- /.row -->
+</body>
+
+

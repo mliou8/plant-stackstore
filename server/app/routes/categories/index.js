@@ -3,11 +3,19 @@ var mongoose = require('mongoose');
 var Product = mongoose.model('Product');
 var Category = mongoose.model('Category');
 
+function getCategoryID (name) {
+    Category.find().exec()
+    .then(function(categories) {
+        return categories._id
+    })
+    .then(null, next);
+}
+
 //Returns all categories
 router.get('/', function(req, res, next) {
     Category.find().exec()
         .then(function(categories) {
-            res.send(categories);
+            res.json(categories);
         })
         .then(null, next);
 });

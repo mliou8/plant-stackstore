@@ -6,10 +6,10 @@ app.config(function($stateProvider) {
         resolve: {
             product: function(ProductFactory, $stateParams) {
                 return ProductFactory.fetchById($stateParams.productId);
+            },
+            reviews: function(ProductFactory, $stateParams) {
+                return ProductFactory.fetchReviewsById($stateParams.productId);
             }
-            // reviews: function(ProductFactory, $stateParams) {
-            //     return ProductFactory.fetchReviewsById($stateParams.productId);
-            // }
             // currentUser: function(AuthService){
             //     console.log("HERE")
             //     return AuthService.getLoggedInUser();
@@ -18,14 +18,20 @@ app.config(function($stateProvider) {
     });
 });
 
-app.controller('ProductCtrl', function($scope, product, ProductFactory, AuthService, $stateParams) {
+app.controller('ProductCtrl', function($scope, reviews, product, ProductFactory, AuthService, $stateParams) {
     $scope.product = product;
-    
+
     ProductFactory.fetchReviewsById($stateParams.productId)
     .then(function(reviews){
         $scope.reviews=reviews;
+        // Keeping original review code here in case we want to use it
+        // var sum = 0;
+        // $scope.reviewsLength = reviews.length;
+        // reviews.forEach(function (data) {
+        //     sum = sum + data.rating
+        // })
+        // $scope.average = Math.floor(sum/($scope.reviewsLength));
     })
-    //$scope.reviews = reviews;
 
     AuthService.getLoggedInUser()
     .then(function(currentUser){
