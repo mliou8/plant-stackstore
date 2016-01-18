@@ -23,6 +23,25 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
      console.log("user", currentUser)
      $scope.users = allUsers
 
+     //for star ratings
+     $scope.max = 5;
+     //$scope.isReadonly = true;
+     $scope.rating;
+
+     $scope.editing = false;
+     var reviewId = 0;
+
+     $scope.checkId = function(id) {
+        return id === reviewId;
+     }
+
+     $scope.changeStatus = function(id) {
+        reviewId = id;
+        $scope.editing = !$scope.editing;
+        //$scope.isReadonly = false;
+        return $scope.editing;
+     }
+
      UserFactory.fetchOrders($scope.user._id)
         .then(function(orders){
             console.log("orders", orders)
@@ -35,20 +54,17 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         $scope.user.reviews =reviews;
     })
 
-    $scope.updateReview = function(id, data, type) {
-        console.log("type is:", type);
-        //console.log("data is: ", data);
-        var submitObj = {};
-        submitObj[type] = data;
+    $scope.updateReview = function(id, text, rating) {
+        var submitObj = {
+            text: text,
+            rating: rating
+        };
         UserFactory.updateReview(id, submitObj)
         .then(function(reviews){
             console.log("updated!", reviews);
+            $scope.editing = false;
         })
     }
-
-    // UserFactory.updateReview()
-    //update a user's review
-    // UserFactory.updateReview()
 
 });
 
@@ -88,6 +104,9 @@ app.factory('UserFactory', function($http) {
             .then(function(response){
                 return response.data;
             })
+        },
+        deleteReview: function(id) {
+            console.log("hi");
         }
     }
 });

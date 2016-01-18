@@ -23,17 +23,21 @@
     <div class="row">
      <h1>REVIEWS</h1>
                 <div class = "row" ng-repeat = "review in user.reviews" class="caption">
-                   <!--  <h3> {{review._id}} </h3> -->
-                       <h3> Product: {{review.product}} </h3>
-                       <h3> Rating: {{review.rating}} </h3>
+                    <h5>{{review.product.photo}}</h5>
+                    <img ng-src={{review.product.photo[0]}}/>
+                    <h3> {{review._id}} </h3>
+                       <h3> Product: {{review.product.name}} </h3>
+                       <uib-rating ng-model="review.rating" max="max" readonly="!checkId(review._id) || !editing" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                       <!-- <h3> Rating: {{review.rating}} </h3> -->
                        <h3> Review:</h3>
-                        <span editable-textarea="review.text" e-rows="7" e-columns="80" e-form="textBtnForm" onbeforesave="updateReview(review._id, $data, 'text')">
+                       <h3 ng-show="!editing">{{review.text}}</h3>
+                       <textarea ng-show="editing && checkId(review._id)" ng-model="review.text">
                         {{ review.text || 'empty' }}
-                        </span>
-                        <button class="btn btn-default" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
-                        edit
-                        </button>
-                        <!-- <pre>{{ review.text }}</pre> -->
+                        </textarea>
+                    <div>
+                        <button class="btn btn-default" ng-click="changeStatus(review._id)" ng-hide="editing && checkId(review._id)">edit</button>
+                        <button class="btn btn-success" ng-click="updateReview(review._id, review.text, review.rating)" ng-show="editing && checkId(review._id)">save!</button>
+                    </div>
                 </div>
     </div>
 </div>
