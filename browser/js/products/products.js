@@ -37,8 +37,10 @@ app.controller('ProductsCtrl', function($scope, allProducts, allCategories, Prod
         product.reviews.forEach(function (review) {
             sum = sum + review.rating
         })
-        product.average = sum / (product.reviewLength);
-    });
+        product.average = Math.floor((sum) / (product.reviewLength));
+        return product;
+    })
+    console.log($scope.products);
 });
 
 app.factory('ProductFactory', function($http) {

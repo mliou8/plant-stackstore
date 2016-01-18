@@ -1,8 +1,12 @@
 .product-overview {
-	.image {
+	.thumbnail {
 		img {
 			width: 125px;
 			height: 94px;
 		}
 	}
+}
+
+.dont-hover {
+	text-decoration: none;
 }
