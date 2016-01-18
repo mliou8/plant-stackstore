@@ -2,10 +2,16 @@
 <h3>Unlimited Power</h3>
    <div class="row">
    <h3> Orders </h3>
-   <div ng-repeat="order in orders" class="col-xs-12">
-   <a class="thumbnail">
-    {{order}}
-   </a>
-    </div>
+    <table class="col-xs-12" style="width:100%">
+    <tr ng-repeat-start="order in orders" ng-click="toggleShow()">
+        <td> {{order.userID}} </td>
+        <td> {{order.status}} </td>
+        <td> {{order.date}} </td>
+    </tr>
+    <tr ng-if="showOrder" ng-repeat-end="">
+        <td> {{order.products}} </td>
+        <td> {{order.status}} </td>
+        <td> {{order.date}} </td>
+    </tr>
     </div>
 </div>

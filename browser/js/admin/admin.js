@@ -14,7 +14,9 @@ app.config(function ($stateProvider) {
 
 
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders) {
+
 	$scope.orders = allOrders;
+
 	$scope.showOrder = false;
 	$scope.toggleShow = function () {
 		if ($scope.showOrder) {
@@ -23,7 +25,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders) {
 			$scope.showOrder = true;
 		}
 	}
-	$scope.oneOrder = OrderFactory.fetchOrderbyId:
+	$scope.oneOrder = OrderFactory.fetchOrderbyId();
 
 });
 
@@ -45,7 +47,7 @@ app.factory('OrderFactory', function ($http) {
 		editOrders: function (data) {
 			return $http.put('/api/orders', data)
 			.then(function (response) {
-				return response.data
+				return response.data;
 			})
 		}
 	}
