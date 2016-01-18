@@ -42,7 +42,6 @@ app.factory('CartFactory', function($http) {
         var k;
         var cart = JSON.parse(localStorage.getItem('cart'));
         cart = cart !== null ? cart : [];
-        console.log(cart);
 
         for(var i = 0; i < items.length; i++) {
             k = 0;
@@ -157,7 +156,7 @@ app.factory('CartFactory', function($http) {
                 localStorage.setItem('cart', JSON.stringify(cart));
             }
 
-            return $http.post('/user/'+user+'/cart', { items: cart })
+            return $http.post('/api/user/'+user._id+'/cart', { items: cart })
                 .then(function(res) {
                     return res.data;
                 })
