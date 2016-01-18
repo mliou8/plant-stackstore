@@ -9,6 +9,9 @@ app.config(function ($stateProvider) {
         	},
         	allProducts: function (OrderFactory) {
         		return OrderFactory.allProducts();
+        	},
+            allUsers: function (UserFactory) {
+        		return UserFactory.fetchAll();
         	}
         }
     });
@@ -16,7 +19,7 @@ app.config(function ($stateProvider) {
 
 
 
-app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts) {
+app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts, allUsers) {
 	//Options for Status edit
 	  $scope.statusOptions = [
 	    {value: 1, text: 'status1'},
@@ -47,9 +50,8 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, a
 			order.showOrder = true;
 		}
 	}
-	// $scope.EditOrder = function (data) {
-		// return factory.editOrders(data)
-	// }
+
+	$scope.users = allUsers;
 });
 
 //Factory to retrieve orders information
