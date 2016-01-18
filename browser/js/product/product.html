@@ -30,7 +30,7 @@
 		<form>
 		<label for="submit">Submit Your Review:</label>
 		<uib-rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
-		<textarea ng-model="text" class="form-control" rows="5" id="submit"></textarea>
+		<textarea ng-model="text" class="form-control" rows="5" id="submit" placeholder="Write your review here" onfocus="this.placeholder=''" onblur="this.placeholder='Write your review here'"></textarea>
 		<input type="submit" id="submit" value="Submit" />
 		</form>
 	</div>
