@@ -16,17 +16,20 @@ app.config(function ($stateProvider) {
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders) {
 
 	$scope.orders = allOrders;
-
-	$scope.showOrder = false;
-	$scope.toggleShow = function () {
-		if ($scope.showOrder) {
-			$scope.showOrder = false;
+	console.log($scope.orders)
+	$scope.toggleShow = function (order) {
+		console.log("order", order)
+		if (order.showOrder) {
+			console.log("setting to false")
+			order.showOrder = false;
 		} else {
-			$scope.showOrder = true;
+			console.log("setting to true");
+			order.showOrder = true;
 		}
 	}
-	$scope.oneOrder = OrderFactory.fetchOrderbyId();
-
+	// $scope.EditOrder = function (data) {
+		// return factory.editOrders(data)
+	// }
 });
 
 //Factory to retrieve orders information
