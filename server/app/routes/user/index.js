@@ -102,7 +102,8 @@ router.delete('/:id', function(req, res, next) {
 });
 
 router.get('/:id/reviews', function(req, res, next) {
-    Review.find({ user: req.params.id }).exec()
+    Review.find({ user: req.params.id })
+        .populate('product').exec()
         .then(function(reviews) {
             res.json(reviews);
         })
