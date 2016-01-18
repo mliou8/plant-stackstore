@@ -23,10 +23,17 @@
     <div class="row">
      <h1>REVIEWS</h1>
                 <div class = "row" ng-repeat = "review in user.reviews" class="caption">
+                   <!--  <h3> {{review._id}} </h3> -->
                        <h3> Product: {{review.product}} </h3>
                        <h3> Rating: {{review.rating}} </h3>
-                       <h3> Review: {{review.text}} </h3>
-
+                       <h3> Review:</h3>
+                        <span editable-textarea="review.text" e-rows="7" e-columns="80" e-form="textBtnForm" onbeforesave="updateReview(review._id, $data, 'text')">
+                        {{ review.text || 'empty' }}
+                        </span>
+                        <button class="btn btn-default" ng-click="textBtnForm.$show()" ng-hide="textBtnForm.$visible">
+                        edit
+                        </button>
+                        <!-- <pre>{{ review.text }}</pre> -->
                 </div>
     </div>
 </div>

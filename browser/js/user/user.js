@@ -35,8 +35,20 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         $scope.user.reviews =reviews;
     })
 
+    $scope.updateReview = function(id, data, type) {
+        console.log("type is:", type);
+        //console.log("data is: ", data);
+        var submitObj = {};
+        submitObj[type] = data;
+        UserFactory.updateReview(id, submitObj)
+        .then(function(reviews){
+            console.log("updated!", reviews);
+        })
+    }
 
-
+    // UserFactory.updateReview()
+    //update a user's review
+    // UserFactory.updateReview()
 
 });
 
@@ -69,6 +81,13 @@ app.factory('UserFactory', function($http) {
                     console.log("response", response.data)
                     return response.data;
                 });
+        },
+        updateReview: function(id, data) {
+            console.log("the id", id);
+            return $http.put('api/review/' + id, data)
+            .then(function(response){
+                return response.data;
+            })
         }
     }
 });
