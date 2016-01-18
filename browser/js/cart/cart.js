@@ -8,11 +8,10 @@ app.config(function($stateProvider) {
                 return AuthService.getLoggedInUser();
             },
             cart: function(user, CartFactory) {
-                if(user !== null) {
-                    return CartFactory.getServerCart(user._id);
-                } else {
-                    return CartFactory.getLocalCart();
-                }
+                return CartFactory.getCart(user)
+                    .catch(function(err) {
+                        console.log(err);
+                    });
             }
         }
     })
@@ -24,108 +23,156 @@ app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, u
     $scope.total = CartFactory.totalCartPrice($scope.cart);
 
     $scope.updateCart = function() {
-        if(user !== null) {
-            CartFactory.updateServerCart($scope.cart, user._id)
-                .then(function(cart) {
-                    $scope.cart = cart;
-                    $scope.total = CartFactory.totalCartPrice($scope.cart);
-                });
-        } else {
-            $scope.cart = $scope.cart.filter(function(item) {
-                return item.quantity > 0;
-            });
-            CartFactory.updateLocalCart($scope.cart);
+        CartFactory.updateCart($scope.cart,user)
+        .then(function(cart) {
+            console.log('new $scope.cart',cart);
+            $scope.cart = cart;
             $scope.total = CartFactory.totalCartPrice($scope.cart);
-        }
+        });
+    }
+
+    $scope.checkout = function() {
+
     }
 });
 
 app.factory('CartFactory', function($http) {
-    return {
-        getLocalCart: function() {
-            var cart = JSON.parse(localStorage.getItem('cart'));
+    var addToLocalCart = function(items) {
+        var itemIdx;
+        var k;
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        cart = cart !== null ? cart : [];
+        console.log(cart);
 
-            return $http.post('/api/products/cartlookup', { items: cart })
-                .then(function(res) {
-                    return res.data.items.map(function(product, i) {
-                        return {
-                            product: product,
-                            quantity: cart[i].quantity
-                        };
-                    });
-                });
-        },
-        getServerCart: function(user) {
-            return $http.get('/api/user/'+user+'/cart')
-                .then(function(res) {
-                    return res.data.items;
-                })
-        },
-        addToLocalCart: function(product, quantity) {
-            var itemIdx;
-            var i = 0;
-            var cart = JSON.parse(localStorage.getItem('cart'));
-            cart = cart !== null ? cart : [];
-            console.log(cart);
+        for(var i = 0; i < items.length; i++) {
+            k = 0;
+            itemIdx = undefined;
 
-            while(itemIdx === undefined && i < cart.length) {
-                if(cart[i].product === product) {
-                    itemIdx = i;
+            while(itemIdx === undefined && k < cart.length) {
+                if(cart[k].product === items[i].product) {
+                    itemIdx = k;
                 }
-                i++;
+                k++;
             }
-
+    
             if(itemIdx !== undefined) {
                 // if item is already present in cart, add new quantity to quantity in cart (or add 1 if no quantity specified)
                 cart[itemIdx].quantity += quantity;
-            } else {
+            } else if(items[i].quantity >= 0) {
                 // if item is not present in cart, push item id & quanitity
-                cart.push({
-                    product: product,
-                    quantity: quantity
+                cart.push(items[i]);
+            }
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+    };
+
+    var addToServerCart = function(items, user) {
+        return $http.post('/api/user/'+user+'/cart', { items: items })
+            .then(function(res) {
+                return res.data;
+            });
+    };
+
+    var getLocalCart = function() {
+        var cart = JSON.parse(localStorage.getItem('cart'));
+        if(cart === null) {
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        return $http.post('/api/products/cartlookup', { items: cart })
+            .then(function(res) {
+                return res.data.items.map(function(product, i) {
+                    return {
+                        product: product,
+                        quantity: cart[i].quantity
+                    };
                 });
+            });
+    };
+
+    var getServerCart = function(user) {
+        return $http.get('/api/user/'+user+'/cart')
+            .then(function(res) {
+                return res.data.items;
+            })
+    };
+
+    var updateLocalCart = function(cart) {
+        cart = cart.filter(function(item) {
+            return item.quantity !== 0;
+        });
+        
+        var localCart = cart.map(function(item) {
+            return {
+                product: item.product._id,
+                quantity: item.quantity
+            }
+        })
+        localStorage.setItem('cart', JSON.stringify(localCart));
+
+        return cart;
+    };
+
+    var updateServerCart = function(cart, user) {
+        var items = cart.map(function(item) {
+            return {
+                product: item.product._id,
+                quantity: item.quantity
+            };
+        });
+
+        return $http({
+            method: 'PUT',
+            url: '/api/user/'+user+'/cart',
+            data: {
+                items: items
+            }
+        })
+            .then(function(res) {
+                return res.data.items;
+            });
+    };
+
+    return {
+        getCart: function(user) {
+            if(user !== null) {
+                return getServerCart(user._id);
+            } else {
+                return getLocalCart();
+            }
+        },
+        addToCart: function(items, user) {
+            if(user !== null) {
+                addToServerCart(items, user._id);
+            } else {
+                addToLocalCart(items);
+            }
+        },
+        addLocalCartToServerCart: function(user) {
+            var cart = JSON.parse(localStorage.getItem('cart'));
+            if(cart === null) {
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
             }
 
-            localStorage.setItem('cart', JSON.stringify(cart));
-        },
-        addToServerCart: function(product, quantity, user) {
-            return $http.post('/api/user/'+user+'/cart', {
-                items: [{
-                    product: product,
-                    quantity: quantity
-                }]
-            })
+            return $http.post('/user/'+user+'/cart', { items: cart })
                 .then(function(res) {
                     return res.data;
-                });
+                })
         },
-        updateLocalCart: function(cart) {
-            var localCart = cart.map(function(item) {
-                return {
-                    product: item.product._id,
-                    quantity: item.quantity
-                }
-            })
-            localStorage.setItem('cart', JSON.stringify(localCart));
-        },
-        updateServerCart: function(cart, user) {
-            var items = cart.map(function(item) {
-                return {
-                    product: item.product._id,
-                    quantity: item.quantity
-                };
-            });
-
-            return $http({
-                method: 'PUT',
-                url: '/api/user/'+user+'/cart',
-                data: {
-                    items: items
-                }
-            })
-                .then(function(res) {
-                    return res.data.items;
-                });
+        updateCart: function(cart, user) {
+            if(user !== null) {
+                return updateServerCart(cart,user._id)
+                    .then(function (cart) {
+                        return cart;
+                    });
+            } else {
+                var p = Promise.resolve(updateLocalCart(cart));
+                console.log(p);
+                return p;
+            }
         },
         totalCartPrice: function(cart) {
             return cart.reduce(function(prev,cur) {

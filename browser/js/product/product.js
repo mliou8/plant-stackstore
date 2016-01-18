@@ -24,10 +24,9 @@ app.controller('ProductCtrl', function($scope, CartFactory, ProductFactory, prod
     $scope.amount = 1;
 
     $scope.addToCart = function() {
-        if(user) {
-            CartFactory.addToServerCart($scope.product._id,$scope.amount,user._id);
-        } else {
-            CartFactory.addToLocalCart($scope.product._id,$scope.amount);
-        }
+        CartFactory.addToCart([{
+            product: $scope.product._id,
+            quantity: $scope.amount
+        }],user);
     }
 });
