@@ -6,6 +6,12 @@ var User = mongoose.model('User');
 var Order = mongoose.model('Order');
 var Cart = mongoose.model('Cart');
 var Product = mongoose.model('Product');
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json()
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+
+
 
 router.get('/', function(req, res, next) {
     User.find().exec()
@@ -16,9 +22,11 @@ router.get('/', function(req, res, next) {
         .then(null, next);
 });
 
-router.post('/', function(req, res, next) {
+
+router.post('/', function(req, res,  next) {
+    console.log("trying to post to user", req.body.data )
     User
-        .create(req.body)
+        .create(req.body.data)
         .then(function(user) {
             // ensure new user isn't an admin
             user.admin = false;
@@ -61,7 +69,7 @@ router.put('/:id', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             for(var key in req.body) {
                 // don't let users set themselves as admins
                 if(key !== 'admin') {
@@ -120,7 +128,7 @@ router.get('/:id/cart', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             res.json(cart);
         })
         .then(null, next);
