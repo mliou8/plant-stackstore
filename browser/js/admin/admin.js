@@ -19,25 +19,22 @@ app.config(function ($stateProvider) {
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts) {
 
 	$scope.orders = allOrders.map (function (order) {
-		order.productString = "";
+		order.productString = [];
 		order.products.forEach(function (product) {
 			allProducts.forEach(function (allProduct) {
 				if (product.product === allProduct._id) {
-					order.productString = order.productString + allProduct.name;
+					order.productString.push(allProduct.name, product.quantity);
 				}
 			})
 		})
+		order.productString = order.productString.join(", ");
 		return order;
 	})
-
 	console.log("Scope.orders ", $scope.orders);
 	$scope.toggleShow = function (order) {
-		console.log("order", order)
 		if (order.showOrder) {
-			console.log("setting to false")
 			order.showOrder = false;
 		} else {
-			console.log("setting to true");
 			order.showOrder = true;
 		}
 	}
