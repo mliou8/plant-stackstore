@@ -9,11 +9,12 @@ var schema = new mongoose.Schema({
         type: String
     },
     imageURL:{
-        type: String
+        type: String,
+        default: "https://s-media-cache-ak0.pinimg.com/236x/ee/1b/fc/ee1bfc6d80856df0a748bda63e69d4d4.jpg"
     },
     email: {
         type: String,
-        unique: true,
+        unique: true
         // required: true
     },
     address: {
