@@ -4,9 +4,15 @@
             <fullstack-logo></fullstack-logo>
         </div>
         <ul class="nav navbar-nav">
-            <li ng-repeat="item in items" ng-show="!item.auth || isLoggedIn()">
-                <a ui-sref-active="active" ui-sref="{{ item.state }}">{{ item.label }}</a>
+        <li ng-show="!item.auth || isLoggedIn()">
+            <a ui-sref-active="active" ui-sref="home">HOME</a>
+        </li>
+            <li ng-repeat="category in categories" ng-show="!item.auth || isLoggedIn()">
+                <a ui-sref-active="active" ui-sref="category({categoryName: category.name})">{{ category.name.toUpperCase() }}</a>
             </li>
+            <li ng-show="!item.auth || isLoggedIn()">
+            <a ui-sref-active="active" ui-sref="products">ALL PRODUCTS</a>
+        </li>
         </ul>
 <button ng-show="!user" ui-sref="login" class="btn login-button">Login</button>
 <button ng-show="user" ui-sref="user" class="btn login-button">User</button>

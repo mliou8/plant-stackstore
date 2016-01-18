@@ -4,6 +4,8 @@ app.config(function($stateProvider) {
         // controller: 'CategoryCtrl',
         templateUrl: 'js/category/category.html',
         controller: function($scope, $stateParams, CategoryFactory) {
+
+            console.log("HERE", $stateParams)
             CategoryFactory.fetchByName($stateParams.categoryName)
             .then(function(category){
                 $scope.category = category;

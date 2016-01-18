@@ -1,19 +1,26 @@
-app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) {
+app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, CategoryFactory) {
 
     return {
         restrict: 'E',
         scope: {},
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
+            CategoryFactory.fetchAll().then(function(cats){
+                console.log("cats", cats)
+                scope.categories = cats
+                scope.items = cats.map(function(cat){
+                    var navObj = { label: cat.name}
+                    return navObj
+                })
+                console.log("new cats", scope.items)
 
-            scope.items = [
-                { label: 'Home', state: 'home' },
-                { label: 'Categories', state: 'categories'},
-                { label: 'Products', state: 'products' },
-                { label: 'About', state: 'about' },
-                { label: 'Documentation', state: 'docs' },
-                { label: 'Members Only', state: 'membersOnly', auth: true }
-            ];
+
+
+            })
+
+
+
+
 
             scope.user = null;
 
