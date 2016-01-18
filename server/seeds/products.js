@@ -5,7 +5,7 @@ var Product = mongoose.model('Product');
 var products = [
 {
         "name": 'Bonsai Tree',
-        "photo": 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Eurya,_1970-2007.jpg',
+        "photo": '/images/product-images/bonsai-tree.jpg',
         "description": 'this is a bonsai tree it\'s pretty dope',
         "price": '40.00',
         "stock": '3',
@@ -14,7 +14,7 @@ var products = [
 
 {
         "name": 'Christmas Wreath',
-        "photo": 'http://emmastrend.com/wp-content/uploads/Christmas-Wreath-4.png',
+        "photo": '/images/product-images/christmas-wreath.jpg',
         "description": 'this is a WREATH it\'s pretty dope',
         "price": '240.00',
         "stock": '2',
@@ -22,7 +22,7 @@ var products = [
 },
 {
         "name": 'Tree Beard',
-        "photo": 'http://snowder.com/blog/ent_300.jpg',
+        "photo": '/images/product-images/treebeard.jpg',
         "description": 'Greetings, little hobbits',
         "price": '400.00',
         "stock": '1',
@@ -31,7 +31,7 @@ var products = [
 
 {
         "name": 'Tulips',
-        "photo": 'http://blog.americanmeadows.com/wp-content/uploads/2012/10/Tulip-Peach-Pink.jpg',
+        "photo": '/images/product-images/pink-tulip.jpg',
         "description": 'Beautiful pot of tulips',
         "price": '24.00',
         "stock": '5',
@@ -40,7 +40,7 @@ var products = [
 
 {
         "name": 'Tomato Plant Seeds',
-        "photo": 'http://tinyfarmblog.com/wp-content/uploads/2009/04/spr09_first-tomato-seedlings.jpg',
+        "photo": '/images/product-images/tomato-seedlings.jpg',
         "description": 'One small bag of seeds',
         "price": '24.00',
         "stock": '5',
@@ -49,13 +49,20 @@ var products = [
 
 {
         "name": 'Springfield Nuclear Power Plant',
-        "photo": 'http://www.risefeed.com/wp-content/uploads/2015/08/Springfield_Nuclear_Power_Plant2.png',
+        "photo": '/images/product-images/springfield-powerplant.png',
         "description": 'Doh',
         "price": '24.00',
         "stock": '5',
         "category": ['nuclear']
 },
-
+{
+        "name": 'Carniverous Plant',
+        "photo": '/images/product-images/venus-fly-trap.jpg',
+        "description": 'Yummy',
+        "price": '40.00',
+        "stock": '5',
+        "category": ['nuclear']
+}
 ]
 module.exports = products;
 
