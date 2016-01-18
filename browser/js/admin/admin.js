@@ -6,6 +6,9 @@ app.config(function ($stateProvider) {
         resolve: {
         	allOrders: function (OrderFactory) {
         		return OrderFactory.fetchAllOrders();
+        	},
+        	allProducts: function (OrderFactory) {
+        		return OrderFactory.allProducts();
         	}
         }
     });
@@ -13,10 +16,21 @@ app.config(function ($stateProvider) {
 
 
 
-app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders) {
+app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts) {
 
-	$scope.orders = allOrders;
-	console.log($scope.orders)
+	$scope.orders = allOrders.map (function (order) {
+		order.productString = "";
+		order.products.forEach(function (product) {
+			allProducts.forEach(function (allProduct) {
+				if (product.product === allProduct._id) {
+					order.productString = order.productString + allProduct.name;
+				}
+			})
+		})
+		return order;
+	})
+
+	console.log("Scope.orders ", $scope.orders);
 	$scope.toggleShow = function (order) {
 		console.log("order", order)
 		if (order.showOrder) {
@@ -49,6 +63,12 @@ app.factory('OrderFactory', function ($http) {
 		},
 		editOrders: function (data) {
 			return $http.put('/api/orders', data)
+			.then(function (response) {
+				return response.data;
+			})
+		},
+		allProducts: function (){
+			return $http.get('/api/products')
 			.then(function (response) {
 				return response.data;
 			})

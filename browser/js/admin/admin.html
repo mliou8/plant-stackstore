@@ -2,17 +2,22 @@
 <h3>Unlimited Power</h3>
    <div class="row">
    <h3> Orders </h3>
-    <table class="col-xs-12 table">
+    <table class="col-xs-12 table-striped table-bordered table">
+    <tr>
+    <th> Customer Name </th>
+    <th> Order Status </th>
+    <th> Order Date </th>
+    <th> Toggle Details </th>
+    </tr>
     <tr ng-repeat-start="order in orders">
-        <td> {{order.userID}} </td>
+        <td> {{order.userID.name}} </td>
         <td> {{order.status}} </td>
-        <td> {{order.date}}  </td>
+        <td> {{order.date}} </td>
         <td> <button ng-click="toggleShow(order)"> Toggle Details </button> </td>
     </tr>
     <tr ng-if="order.showOrder" ng-repeat-end="">
-        <td> {{order.products[0].product}} </td>
-        <td> {{order.status}} </td>
-        <td> {{order.date}} </td>
+        <th> Product Name(s) </th>
+        <td colspan="3"> {{order.productString}} </td>
     </tr>
     </div>
 </div>

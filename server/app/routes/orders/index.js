@@ -5,7 +5,8 @@ var User = mongoose.model('User');
 var Order = mongoose.model('Order');
 
 router.get('/', function(req, res, next) {
-    Order.find().exec()
+    Order.find()
+    .populate('userID').exec()
         .then(function(orders) {
             res.json(orders);
         })
