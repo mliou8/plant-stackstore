@@ -76,7 +76,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
        return $scope.editing;
     }
 
-  	scope.updateUser = function(status, id) {
+  	$scope.updateUser = function(status, id) {
   		var submitObj = {
   		    status: status
   		};

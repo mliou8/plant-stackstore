@@ -49,7 +49,7 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         })
 
      UserFactory.fetchReviews($scope.user._id)
-    .then(function(reviews){
+        .then(function(reviews){
         console.log("REVIEWS", reviews)
         $scope.user.reviews =reviews;
     })
