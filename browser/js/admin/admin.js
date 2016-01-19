@@ -9,10 +9,22 @@ app.config(function ($stateProvider) {
         	},
         	allProducts: function (OrderFactory) {
         		return OrderFactory.allProducts();
-        	}
-        }
-    });
+         	},
+        	isadmin: function (AuthService, $state) {
+        	 AuthService.getLoggedInUser()
+        		.then (function (user) {
+        			console.log("user ", user);
+        			if(!user.admin || !user) {
+        				console.log("Naughty naughty");
+        				return $state.go('home');
+        			}
+        			return
+        		})
+		    }
+		}
+	});
 });
+
 
 
 
