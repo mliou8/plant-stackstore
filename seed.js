@@ -32,6 +32,7 @@ var Order = Promise.promisifyAll(mongoose.model('Order'));
 var categoryData =require('./server/seeds/categories.js')
 var productData =require('./server/seeds/products.js')
 var userData =require('./server/seeds/users.js')
+var seedReviewData =require('./server/seeds/reviews.js')
 
 // Category
 // User
@@ -138,24 +139,29 @@ function seedOrders () {
 
 function seedReviews () {
    var promises = []
-   var reviewCount = 10;
+   var reviewCount = seedReviewData.length;
    console.log("seeding reviews")
-    while (reviewCount > 0){
-      var rating = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-      var productIndex = Math.floor(Math.random() * myProducts.length) ;
-      var userIndex = Math.floor(Math.random() * myUsers.length) ;
-      var text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sagittis euismod elit non vestibulum. Maecenas porta feugiat dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris sit amet sem id neque varius dapibus. Nunc varius lacinia tellus, a ultricies nibh volutpat a. Vivamus nulla metus, finibus vel fringilla nec, placerat id urna. Aliquam erat volutpat. Nam arcu massa, porta in nisi quis, scelerisque aliquet augue. Duis rutrum finibus elit, quis convallis tortor sagittis id. Praesent vitae luctus sem, volutpat tempus risus. Etiam quis ex metus. Cras id congue turpis. Mauris et massa dapibus, varius urna non, pharetra quam. Praesent tempor dui at ante suscipit tristique a a erat. Aenean ultrices sem eget libero molestie, quis pulvinar arcu pharetra. Nulla placerat ornare turpis eget tincidunt. Quisque imperdiet libero id dictum pretium. Aliquam arcu lectus, mattis quis erat sed, pellentesque ultrices arcu. Nam mauris lectus, molestie et turpis auctor, pellentesque gravida ipsum. Aliquam lobortis in odio in rutrum. Vestibulum justo nunc, molestie sit amet venenatis et, porttitor iaculis urna. Praesent et nunc placerat, tempor nunc in, ornare augue. Sed eget semper est, ut condimentum massa. Aenean a placerat mi. Morbi tellus enim, rutrum elementum neque a, egestas sollicitudin risus. Etiam id nibh vel neque malesuada interdum eget eget magna."
+    for (i = 0; i<seedReviewData.length; i++) {
+
+      var rating = seedReviewData[i].rating
+      var product = myProducts.filter(function( obj ) {
+                 return obj.name == seedReviewData[i].product});
+      console.log("product", product)
+      var userIndex = Math.floor(Math.random() * myUsers.length)
+      var text = seedReviewData[i].text
+
       var reviewData = { rating: rating,
                           text: text,
-                          product: myProducts[productIndex]._id.toString(),
+                          product: product._id,
                           user:  myUsers[userIndex]._id
                         }
-      //console.log("reviewData", reviewData)
+      console.log("reviewData", reviewData)
       promises.push(Review.create(reviewData))
       reviewCount--
     }
       return Promise.all(promises)
 }
+
 
 //Promise.all to save all the different seeds
 connectToDb.then(function () {
