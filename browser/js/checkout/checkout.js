@@ -12,21 +12,46 @@ app.config(function($stateProvider) {
                     .catch(function(err) {
                         console.log(err);
                     });
+            },
+            promo: function(cart, user, CheckoutFactory) {
+                if(cart.promo) {
+                    return CheckoutFactory.fetchPromo(cart.promo.code)
+                        .catch(function(err) {
+                            return {
+                                code: err.data,
+                                status: err.status
+                            };
+                        });
+                } else {
+                    return {
+                        code: undefined,
+                        status: undefined
+                    };
+                }
             }
         }
     })
 });
 
-app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, cart, user) {
-    $scope.user = {
-        _id: user._id,
-        address: user.address,
-        email: user.email,
-        name: user.name
-    };
-    $scope.cart = cart;
+app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, cart, promo, user) {
+    if(user !== null) {
+        $scope.user = {
+            _id: user._id,
+            address: user.address,
+            email: user.email,
+            name: user.name
+        };
+    }
+
+    $scope.promo = promo.code !== undefined ? promo : undefined;
+    $scope.invalidPromo = promo.status === 404 ? true : false;
+    $scope.expiredPromo = promo.status === 410 ? true : false;
+    $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+    console.log($scope.cart, cart);
     $scope.total = CartFactory.totalCartPrice($scope.cart);
-    $scope.invalidPromo = false;
+    console.log($scope.total);
+    $scope.changePromo = false;
+    console.log($scope.promo);
 
     $scope.createOrder = function() {
         console.log($scope.user);
@@ -34,19 +59,71 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
     }
 
     $scope.applyPromo = function() {
-        CheckoutFactory.fetchPromo($scope.promoForm.code.$modelValue)
+        $scope.expiredPromo = false;
+        $scope.invalidPromo = false;
+        var newCode = $scope.promoCode;
+        $scope.promoCode = undefined;
+        CheckoutFactory.fetchPromo(newCode)
         .then(function(promo) {
-            console.log(cart, promo);
-            $scope.cart.promo = promo;
-            return CheckoutFactory.applyPromo($scope.cart, user, $scope.promo);
+            $scope.promo = promo;
+            $scope.changePromo = false;
+            return CheckoutFactory.setPromo(user, $scope.promo);
         })
-        .then(function(cart) {
-            console.log(cart);
-            $scope.cart = cart;
+        .then(function(promo) {
+            $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
         })
         .catch(function(err) {
-            console.log(err);
-        })
+            // promo code not found
+            if(err.status === 404) {
+                $scope.promo = {
+                    code: err.data
+                };
+                $scope.invalidPromo = true;
+            }
+            // promo code has expired
+            else if(err.status === 410) {
+                $scope.promo = {
+                    code: err.data
+                };
+                $scope.expiredPromo = true;
+            } else {
+                console.log(err);
+            }
+        });
+    }
+
+    $scope.newPromo = function() {
+        console.log('change');
+        $scope.changePromo = true;
+    }
+
+    $scope.cancelNewPromo = function() {
+        console.log($scope.changePromo);
+        $scope.changePromo = false;
+        $scope.promoCode = undefined;
+    }
+
+    $scope.deletePromo = function() {
+        CheckoutFactory.deletePromo(user)
+            .then(function(info) {
+                $scope.promo = undefined;
+                $scope.expiredPromo = false;
+                $scope.invalidPromo = false;
+                $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+                if(user === null) {
+                    $scope.$digest();
+                }
+            })
+            .catch(function(err) {
+                console.log(err);
+                $scope.promo = undefined;
+                $scope.expiredPromo = false;
+                $scope.invalidPromo = false;
+                $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+                if(user === null) {
+                    $scope.$digest();
+                }
+            })
     }
 });
 
@@ -56,21 +133,68 @@ app.factory('CheckoutFactory', function($http) {
     };
     
     return {
-        applyPromo: function(cart, user, promo) {
-            if(user !== null) {
-                return $http.post('/api/user/'+user._id, { code: promo })
-                    .then(function(res) {
-                        //
-                    })
+        addDiscounts: function(cart, promo) {
+            console.log('addDiscounts cart',cart);
+            return cart.map(function(item) {
+                if(promo && promo.appliesTo === 'product' && item.product._id === promo.product) {
+                    console.log('product discount');
+                    return {
+                        product: item.product,
+                        quantity: item.quantity,
+                        discount: promo.discount
+                    };
+                } else if(promo && promo.appliesTo === 'category' && item.product.category.indexOf(promo.category)) {
+                    console.log('category discount');
+                    return {
+                        product: item.product,
+                        quantity: item.quantity,
+                        discount: promo.discount
+                    };
+                } else if(promo && promo.appliesTo === 'all') {
+                    console.log('all discount');
+                    return {
+                        product: item.product,
+                        quantity: item.quantity,
+                        discount: promo.discount
+                    };
+                } else {
+                    console.log('no discount');
+                    return {
+                        product: item.product,
+                        quantity: item.quantity,
+                        discount: 0
+                    }
+                }
+            })
+        },
+        deletePromo: function(user) {
+            if(user !== null && user !== undefined) {
+                return $http({
+                    method: 'DELETE',
+                    url: '/api/user/'+user._id+'/promo'
+                })
             } else {
-                
+                localStorage.removeItem('promo');
+                return Promise.resolve('ok');
             }
         },
-        fetchPromo: function(promo) {
-            return $http.get('/api/promo/'+promo)
+        fetchPromo: function(code) {
+            return $http.get('/api/promo/code/'+code)
                 .then(function(res) {
                     return res.data;
                 })
+        },
+        setPromo: function(user, promo) {
+            console.log(promo);
+            if(user !== null) {
+                return $http.post('/api/user/'+user._id+'/promo', { code: promo.code })
+                    .then(function(res) {
+                        return res.data;
+                    })
+            } else {
+                localStorage.setItem('promo', promo.code);
+                return Promise.resolve(promo);
+            }
         }
         // sendOrder: function(cart, user) {
         //     return $http.post('/api/order', {})

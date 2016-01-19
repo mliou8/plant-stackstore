@@ -22,26 +22,26 @@ router.post('/', function(req, res, next) {
         .then(null, next);
 });
 
-router.get('/:code', function(req, res, next) {
-    Promo.findOne({ code: req.params.code })
-    .then(function(promo) {
-        if(!promo) {
-            var err = new Error('Promo code '+req.params.code+' not found');
-            err.status = 404;
-            throw err;
-        }
+router.get('/:id', function(req, res, next) {
+    Promo.findById(req.params.id)
+        .then(function(promo) {
+            if(!promo) {
+                var err = new Error('Promo #'+req.params.id+' not found');
+                err.status = 404;
+                throw err;
+            }
 
-        res.json(promo);
-    })
-    .then(null, next);
-})
+            res.json(promo);
+        })
+        .then(null, next);
+});
 
 router.put('/:id', function(req, res, next) {
     Promo.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
-    .then(function(promo) {
-        res.json(promo);
-    })
-    .then(null, next);
+        .then(function(promo) {
+            res.json(promo);
+        })
+        .then(null, next);
 
 })
 
@@ -49,6 +49,24 @@ router.delete('/:id', function(req, res, next) {
     Promo.remove({ _id: req.params.id })
         .then(function(info) {
             res.json(info);
+        })
+        .then(null, next);
+})
+
+router.get('/code/:code', function(req, res, next) {
+    Promo.findOne({ code: req.params.code })
+        .then(function(promo) {
+            if(!promo) {
+                var err = new Error(req.params.code);
+                err.status = 404;
+                throw err;
+            } else if(promo.expires < Date.now()) {
+                err = new Error(req.params.code);
+                err.status = 410;
+                throw err;
+            }
+
+            res.json(promo);
         })
         .then(null, next);
 })
