@@ -9,8 +9,22 @@
     <th> Order Date </th>
     <th> Toggle Details </th>
     </tr>
-    <div class = "row"> Filter by Status <searchbar> </searchbar>
-    <tr ng-repeat-start="order in orders">
+
+<div class = "row"> Filter by Status
+<div class="row search-bar">
+ <div class="col-md-5">
+    <div class="input-group">
+      <input type="text" class="form-control" aria-label="..." ng-model="searchInput">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default"> Search </button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+
+    <tr ng-repeat-start="order in orders | filter: {status: searchInput}" >
         <td> {{order.userID.name}} </td>
         <td> <a href="#" editable-select="order.status" e-ng-options="s.value as s.text for s in statusOptions" e-form="editStatus">
           <span ng-hide="editStatus.$visible"> {{order.status}} </span>

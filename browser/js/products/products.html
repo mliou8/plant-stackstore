@@ -1,8 +1,6 @@
-<div>
+<div class = "container">
     <h3>Products</h3>
             <searchbar> </searchbar>
-
-
         <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview">
             <a class="thumbnail" ui-sref="product({productId: product._id})">
                 <div class="caption">

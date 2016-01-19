@@ -24,6 +24,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, a
 	    {value: 'delivered', text: 'delivered'},
 	    {value: 'shipped', text: 'shipped'}
 	  ];
+
 	$scope.editOrder = function (data) {
 		alert("Thanks for editing the order!")
 		return OrderFactory.editOrder(data._id, data);
