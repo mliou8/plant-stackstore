@@ -21,7 +21,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res,  next) {
-    console.log("trying to post to user", req.body )
     User
         .create(req.body.data)
         .then(function(user) {
@@ -69,9 +68,9 @@ router.put('/:id', function(req, res, next) {
 
             for(var key in req.body) {
                 // don't let users set themselves as admins
-                if(key !== 'admin') {
+                // if(key !== 'admin') {
                     user[key] = req.body[key];
-                }
+                // }
             }
             return user.save();
         })
@@ -288,7 +287,7 @@ router.delete('/:id/cart', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             res.json(cart);
         })
        .then(null, next);
