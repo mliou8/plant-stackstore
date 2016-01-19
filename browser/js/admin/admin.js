@@ -22,14 +22,15 @@ app.config(function ($stateProvider) {
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory, AdminFactory, allOrders, allProducts, allUsers) {
 	//Options for Status edit
 	  $scope.statusOptions = [
-	    {value: 1, text: 'status1'},
-	    {value: 2, text: 'status2'},
-	    {value: 3, text: 'status3'},
-	    {value: 4, text: 'status4'}
+	    {value: 'pending', text: 'pending'},
+	    {value: 'completed', text: 'completed'},
+	    {value: 'delivered', text: 'delivered'},
+	    {value: 'shipped', text: 'shipped'}
 	  ];
-	$scope.status = {
-	    status: 2
-  	};
+	$scope.editOrder = function (data) {
+		alert("Thanks for editing the order!")
+		return OrderFactory.editOrder(data._id, data);
+	}
 	$scope.orders = allOrders.map (function (order) {
 		order.productString = [];
 		order.products.forEach(function (product) {
@@ -42,7 +43,6 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 		order.productString = order.productString.join(", ");
 		return order;
 	})
-	console.log("Scope.orders ", $scope.orders);
 	$scope.toggleShow = function (order) {
 		if (order.showOrder) {
 			order.showOrder = false;
@@ -128,9 +128,12 @@ app.factory('OrderFactory', function ($http) {
 				return response.data;
 			});
 		},
-		editOrders: function (data) {
-			return $http.put('/api/orders', data)
+		editOrder: function (id, body) {
+			console.log("id ", id)
+			console.log("body", body)
+			return $http.put('/api/orders/' + id, body)
 			.then(function (response) {
+				console.log("success");
 				return response.data;
 			})
 		},
