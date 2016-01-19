@@ -83,6 +83,12 @@ app.factory('ProductFactory', function($http) {
             .then (function (response) {
                 return response.data;
             });
+        },
+        editProduct: function(id, data) {
+            return $http.put('api/products/' + id, data)
+            .then(function(response){
+                return response.data;
+            })
         }
     }
 })

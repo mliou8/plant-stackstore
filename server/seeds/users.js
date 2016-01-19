@@ -48,7 +48,7 @@ var users = [
  "twitter": "twittertest4",
  "facebook": "fbtest4",
  "google": "testuser4@gmail",
- "admin": false
+ "admin": true
 }
 ];
 module.exports = users;

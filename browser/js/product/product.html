@@ -1,13 +1,63 @@
 <div>
     <img ng-src={{product.photo[0]}} style="width:304px;height:228px;">
-    <h3>{{ product.name }}</h3>
-    <h5>${{ product.price }}</h5>
-    <h5><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
-    <h5>#{{ product._id }}</h5>
-    <h5 ng-show="product.stock === 0">Out of stock.</h5>
-    <h5 ng-show="product.stock > 0">{{ product.stock }} available</h5>
+    <form ng-show="adminEditing" ng-submit="changePhoto()">
+            <input placeholder="Input New Url Here" ng-model="photo"></input>
+                <div>
+                    <button class="btn btn-success" type="submit">Add New Url</button>
+                </div>
+    </form>
+   <!-- logic for product name -->
+    <h3 ng-show="!adminEditing">{{ product.name }}</h3>
+    <div ng-show="adminEditing"><a href="#" editable-text="product.name">{{ product.name || 'empty' }}</a></div>
     <div>
-        <form name="order-form" novalidate ng-submit="addToCart()">
+        <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
+    </div>
+    <!-- logic for product price -->
+    <div ng-show="adminEditing"><a href="#" editable-text="product.price">${{ product.price || 'empty' }}</a></div>
+    <div>
+        <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
+    </div>
+    <h5 ng-show="!adminEditing">${{ product.price }}</h5>
+
+    <!-- come back to this category section!! almost done. -->
+    <h5 ng-show="!adminEditing"><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
+
+    <div ng-show="adminEditing">
+     <h5>
+
+        <span ng-repeat="category in product.category">
+           {{category.name}}
+           <button class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>      
+        </span>
+
+    </h5>
+    </div>
+
+
+    <form ng-show="adminEditing" name="category-form" novalidate ng-submit="addCategory(product)">
+            <fieldset>
+                <div>
+                    <label for="category">Category</label>
+                    <select name="category" ng-options="n.name for n in categories" ng-model="cat"></select>
+                </div>
+                <div>
+                    <button class="btn btn-success" type="submit">Add Category</button>
+                </div>
+            </fieldset>
+        </form>
+
+    <!-- logic for product id -->
+    <h5>#{{ product._id }}</h5>
+    <!-- logic for product stock/quantity -->
+    <div ng-show="adminEditing"><a href="#" editable-text="product.stock">{{ product.stock || 0 }} available</a></div>
+    <div>
+        <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
+    </div>
+    <h5 ng-show="product.stock == 0 && !adminEditing">Out of stock</h5>
+
+    <h5 ng-show="product.stock > 0 && !adminEditing">{{ product.stock }} available</h5>
+    <div>
+        <form ng-hide="product.stock == 0" name="order-form" novalidate ng-submit="addToCart()">
             <fieldset>
                 <div>
                     <label for="quantity">Qty</label>
@@ -47,6 +97,10 @@
 </div>
 <div ng-show="formSubmitted">
 	<h4>Review Submitted!</h4>
+</div>
+
+<div ng-show="user.admin">
+     <button class="btn btn-default" ng-click="editClicked()">edit</button>
 </div>
     <p><a ui-sref="products">Back to all products</a>
 </div>
