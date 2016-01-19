@@ -1,16 +1,13 @@
 var mongoose = require('mongoose');
 
 
-var categories = [{"name": "tree" },
+var categories = [
 {"name": "house plants" },
-{"name": "holiday" },
 {"name": "mythical" },
 {"name": "carnivorous" },
 {"name": "nuclear" },
 {"name": "seeds" },
-{"name": "accessories" },
-{"name": "flowers" },
-{"name": "bushes" }
+{"name": "flowers" }
 ];
 
 module.exports = categories;
