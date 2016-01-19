@@ -115,17 +115,18 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
         	.then(function(){
             	UserFactory.fetchAll()
             		.then(function(users){
-            			$scope.users =users;
+            			$scope.users = users;
             		})
         	})
     }
-    $scope.mailtime = function (data) {
-    	return MailFactory.transporter.sendMail(MailFactory.mailOptions, function(error, data){
-		    if(error){
-		        return console.log(error);
-		    }
-		    console.log('Message sent: ' + data.response);
-		});
+    $scope.mailData = {
+      from: '',
+      name: '',
+      body: ''
+    }
+
+    $scope.sendMail = function (data) {
+      return MailFactory.sendMail($scope.mailData);
     }
 });
 
@@ -190,27 +191,11 @@ app.factory('AdminFactory', function($http){
 })
 
 app.factory('MailFactory', function ($http) {
-		var nodemailer = require('nodemailer');
-		var MailFactory = {};
-		//create reusable transporter object using the default SMTP transport
-		MailFactory.transporter = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
-
-		// set up email data with unicode symbols
-		MailFactory.mailOptions = {
-		    from: 'Awesome Sauce 👥 <plant.stackstore@gmail.com>', // sender address
-		    to: 'plant.stackstore@gmail.com', // list of receivers
-		    subject: 'Hello ✔', // Subject line
-		    text: 'Hello world 🐴', // plaintext body
-		    html: '<b>Hello world 🐴</b>' // html body
-		};
-		// send mail with defined transport object
-		MailFactory.transporter.sendMail(mailOptions, function(error, info){
-		    if(error){
-		        return console.log(error);
-		    }
-		    console.log('Message sent: ' + info.response);
-		});
-		return MailFactory;
+ return {
+    postMail: function (data) {
+          $http.post('/api/email', data);
+    }
+  }
 })
 
 
