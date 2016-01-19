@@ -71,6 +71,7 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
         })
         .then(function(promo) {
             $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+            $scope.total = CartFactory.totalCartPrice($scope.cart);
         })
         .catch(function(err) {
             // promo code not found
@@ -110,6 +111,7 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
                 $scope.expiredPromo = false;
                 $scope.invalidPromo = false;
                 $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+                $scope.total = CartFactory.totalCartPrice($scope.cart);
                 if(user === null) {
                     $scope.$digest();
                 }
@@ -120,6 +122,7 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
                 $scope.expiredPromo = false;
                 $scope.invalidPromo = false;
                 $scope.cart = CheckoutFactory.addDiscounts(cart.items, $scope.promo);
+                $scope.total = CartFactory.totalCartPrice($scope.cart);
                 if(user === null) {
                     $scope.$digest();
                 }
@@ -128,10 +131,6 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
 });
 
 app.factory('CheckoutFactory', function($http) {
-    var createPromoCart = function(promo, cart) {
-        //
-    };
-    
     return {
         addDiscounts: function(cart, promo) {
             console.log('addDiscounts cart',cart);
