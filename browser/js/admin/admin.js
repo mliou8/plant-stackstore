@@ -21,16 +21,18 @@ app.config(function ($stateProvider) {
 
 app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory, AdminFactory, allOrders, allProducts, allUsers) {
 	//Options for Status edit
-	  $scope.statusOptions = [
-	    {value: 'pending', text: 'pending'},
-	    {value: 'completed', text: 'completed'},
-	    {value: 'delivered', text: 'delivered'},
-	    {value: 'shipped', text: 'shipped'}
-	  ];
+	$scope.statusOptions = [
+	  {value: 'pending', text: 'pending'},
+	  {value: 'completed', text: 'completed'},
+	  {value: 'delivered', text: 'delivered'},
+	  {value: 'shipped', text: 'shipped'}
+	];
+
 	$scope.editOrder = function (data) {
 		alert("Thanks for editing the order!")
 		return OrderFactory.editOrder(data._id, data);
 	}
+
 	$scope.orders = allOrders.map (function (order) {
 		order.productString = [];
 		order.products.forEach(function (product) {
@@ -43,6 +45,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 		order.productString = order.productString.join(", ");
 		return order;
 	})
+
 	$scope.toggleShow = function (order) {
 		if (order.showOrder) {
 			order.showOrder = false;
@@ -52,49 +55,37 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 	}
 
 	$scope.users = allUsers;
-     $scope.adminMessage = "Select Status"
-     $scope.editing = false;
-     var userId = 0;
-     $scope.statuses = ["true", "false"]
+    $scope.adminMessage = "Select Status"
+    $scope.editing = false;
+    var userId = 0;
+    $scope.statuses = ["true", "false"]
 
-     $scope.checkId = function(id) {
-        return id === userId;
-     }
-
-     $scope.test = "hi"
-
-     $scope.updateStatus = function(status, id){
-     	console.log("status", status)
-     }
-     $scope.changeStatus = function(id) {
-        userId = id;
-        $scope.editing = !$scope.editing;
-        return $scope.editing;
-     }
-
-    // $scope.updateUser = function(id, text, rating) {
-    //     var submitObj = {
-    //         text: text,
-    //         rating: rating
-    //     };
-    //     AdminFactory.updateUser(id, submitObj)
-    //     .then(function(user){
-    //         console.log("updated!", user);
-    //         $scope.editing = false;
-    //     })
-    // }
-
-  $scope.updateUser = function(status, id) {
-  	console.log("new status", status)
-        var submitObj = {
-            status: status
-        };
-        AdminFactory.updateUser(id, submitObj)
-        .then(function(user){
-            console.log("updated!", user);
-            $scope.editing = false;
-        })
+    $scope.checkId = function(id) {
+       return id === userId;
     }
+
+    $scope.test = "hi"
+
+    $scope.updateStatus = function(status, id){
+    	console.log("status", status)
+    }
+
+    $scope.changeStatus = function(id) {
+       userId = id;
+       $scope.editing = !$scope.editing;
+       return $scope.editing;
+    }
+
+  	scope.updateUser = function(status, id) {
+  		var submitObj = {
+  		    status: status
+  		};
+
+  		AdminFactory.updateUser(id, submitObj)
+  			.then(function(user){
+  		    	$scope.editing = false;
+  		})
+  	}
 
     $scope.deleteUser = function(id){
         AdminFactory.deleteUser(id)
@@ -103,14 +94,21 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
         })
         .then(function(){
             UserFactory.fetchAll()
-            .then(function(users){
-            console.log("USERS", users)
-            $scope.users =users;
-            })
+            	.then(function(users){
+            		$scope.users =users;
+            	})
         })
     }
 
-
+    $scope.resetPW = function(id){
+        AdminFactory.resetPW(id)
+        	.then(function(){
+            	UserFactory.fetchAll()
+            		.then(function(users){
+            			$scope.users =users;
+            		})
+        	})
+    }
 });
 
 //Factory to retrieve orders information
@@ -150,15 +148,20 @@ app.factory('AdminFactory', function($http){
    var AdminFactory = {}
 
    AdminFactory.updateUser= function(id, data) {
-       console.log("the id", id);
-       return $http.put('api/user/' + id, data)
+	       return $http.put('api/user/' + id, data)
+       .then(function(response){
+           return response.data;
+       })
+   }
+
+   AdminFactory.resetPW= function(id) {
+       return $http.put('api/user/' + id, {reset: true})
        .then(function(response){
            return response.data;
        })
    }
 
    AdminFactory.deleteUser= function(id, data) {
-       console.log("the id", id);
        return $http.delete('api/user/' + id, data)
        .then(function(response){
            return response.data;

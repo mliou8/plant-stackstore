@@ -40,7 +40,7 @@
                 <th> Address </th>
                 <th> Admin </th>
                 <th>  </th>
-                <th> test </th>
+                <th>Credentials</th>
 
             </tr>
             <tr ng-repeat="user in users">
@@ -57,15 +57,13 @@
                     </form>
 
                 </td>
-                <td> <button class="btn btn-default" ng-click="changeStatus(user._id)" ng-hide="editing && checkId(user._id)">edit</button>
-                        <button class="btn btn-success" ng-click="updateUser(user.admin, user._id)" ng-show="editing && checkId(user._id)">save!</button>
-                        <button class="btn btn-danger" ng-click="deleteUser(user._id)">delete</button>
+                <td> <button class="btn btn-default" ng-click="changeStatus(user._id)" ng-hide="editing && checkId(user._id)">EDIT ADMIN</button>
+                        <button class="btn btn-success" ng-click="updateUser(user.admin, user._id)" ng-show="editing && checkId(user._id)">SAVE</button>
+                        <button class="btn btn-danger" ng-click="deleteUser(user._id)">DELETE</button>
                     </div>
                 </td>
                 <td>
-                    <textarea ng-show="editing && checkId(user._id)" ng-model="user.text">
-                        {{ user.text || 'empty' }}
-                        </textarea>
+                        <button class="btn btn-success" ng-click="resetPW(user._id)">RESET PASSWORD</button>
                 </td>
             </tr>
 
