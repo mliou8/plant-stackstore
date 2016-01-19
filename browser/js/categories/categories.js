@@ -18,7 +18,7 @@ app.controller('CategoriesCtrl', function($scope, allCategories){
 app.factory('CategoryFactory', function($http) {
 	var CategoryFactory = {}
 	CategoryFactory.fetchAll = function() {
-		return $http.get('api/categories')
+		return $http.get('/api/categories')
 		.then(function(response){
 			return response.data;
 		})
@@ -33,7 +33,7 @@ app.factory('CategoryFactory', function($http) {
     }
 
     CategoryFactory.fetchByName = function(name) {
-        return $http.get('api/categories/name/'+ name)
+        return $http.get('/api/categories/name/'+ name)
         .then(function(response){
             console.log("response:" + response.data);
             return response.data;
