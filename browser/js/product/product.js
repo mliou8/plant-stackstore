@@ -13,19 +13,24 @@ app.config(function($stateProvider) {
             },
             user: function(AuthService) {
                 return AuthService.getLoggedInUser();
+            },
+            categories: function(CategoryFactory) {
+                return CategoryFactory.fetchAll();
             }
         }
     });
 });
 
-app.controller('ProductCtrl', function($scope, reviews, product, user, CartFactory, ProductFactory, AuthService) {
+app.controller('ProductCtrl', function($scope, categories, reviews, product, user, CartFactory, ProductFactory, AuthService) {
     $scope.product = product;
     $scope.reviews = reviews;
     $scope.user = user;
     $scope.amount = 1;
     $scope.adminEditing = false;
+    $scope.categories = categories;
+    console.log($scope.categories);
 
-    console.log("admin?", $scope.user.admin);
+    //console.log("admin?", $scope.user.admin);
 
     //logic for making the button show and disappear
     $scope.showButton = true;
@@ -83,5 +88,21 @@ app.controller('ProductCtrl', function($scope, reviews, product, user, CartFacto
     $scope.editProduct = function(data) {
         console.log(data);
         return ProductFactory.editProduct(product._id, data);
+    }
+
+    $scope.addCategory = function(data) {
+        console.log("data is ", data);
+        console.log("newCategory is ", $scope.cat);
+        data.category.push($scope.cat);
+        return ProductFactory.editProduct(product._id, data);
+    }
+    $scope.deleteCategory = function(category) {
+        $scope.product.category.splice($scope.product.category.indexOf(category), 1);
+        return ProductFactory.editProduct(product._id, $scope.product);
+    }
+
+    $scope.changePhoto = function() {
+        $scope.product.photo[0] = $scope.photo;
+        return ProductFactory.editProduct(product._id, $scope.product);
     }
 });
