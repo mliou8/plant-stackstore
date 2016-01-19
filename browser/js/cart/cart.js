@@ -17,7 +17,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, user) {
+app.controller('CartCtrl', function($scope, $state, CartFactory, ProductFactory, cart, user) {
     $scope.username = user ? user.name : 'guest';
     $scope.cart = cart;
     $scope.total = CartFactory.totalCartPrice($scope.cart);
@@ -32,7 +32,7 @@ app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, u
     }
 
     $scope.checkout = function() {
-
+        $state.go('checkout');
     }
 });
 
