@@ -106,6 +106,23 @@ var reviews =[
     "product": 'FD792 Blue Strawberry Seeds',
     "rating": 5,
     "text": "Best. Tree. Ever"
+},
+{
+    "product": 'Bulbasaur',
+    "rating": 2,
+    "text": "STILL WAITING FOR HIM TO EVOLVE!!"
+}
+,
+{
+    "product": 'Mother Willow',
+    "rating": 5,
+    "text": "Best Advice ever. Love this lady"
+}
+,
+{
+    "product": 'Mother Willow',
+    "rating": 1,
+    "text": "Did not know Powerball numbers. What is return policy?? Pls advise"
 }
 
 ]

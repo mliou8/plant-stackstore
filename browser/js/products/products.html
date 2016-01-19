@@ -2,7 +2,6 @@
     <h3>Products</h3>
             <searchbar> </searchbar>
 
-
         <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview">
 
             <a class="thumbnail" ui-sref="product({productId: product._id})">
@@ -21,6 +20,8 @@
                     </h5>
                     <h5 ng-show="product.stock === 0">Out of stock.</h5>
                 </div>
+            </a>
         </div>
+
 </div>
 

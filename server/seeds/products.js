@@ -143,6 +143,26 @@ var products = [
         "stock": '5',
         "category": ['seeds']
 }
+,
+
+{
+        "name": 'Bulbasaur',
+        "photo": '/images/product-images/bulbasaur.png',
+        "description": 'Bulbasaur is a small, quadruped Pokémon with green to bluish-green skin and darker green patches. It is found in grasslands and forests throughout the Kanto region. However, due to Bulbasaur\'s status as starter Pokémon, it is hard to come by in the wild and generally found under the ownership of a Trainer',
+        "price": '1000.00',
+        "stock": '1',
+        "category": ['mythical']
+}
+,
+
+{
+        "name": 'Mother Willow',
+        "photo": '/images/product-images/willow.jpeg',
+        "description": 'Bulbasaur is a small, quadruped Pokémon with green to bluish-green skin and darker green patches. It is found in grasslands and forests throughout the Kanto region. However, due to Bulbasaur\'s status as starter Pokémon, it is hard to come by in the wild and generally found under the ownership of a Trainer',
+        "price": '1000.00',
+        "stock": '1',
+        "category": ['mythical']
+}
 ]
 module.exports = products;
 
