@@ -23,6 +23,9 @@ app.controller('ProductCtrl', function($scope, reviews, product, user, CartFacto
     $scope.reviews = reviews;
     $scope.user = user;
     $scope.amount = 1;
+    $scope.adminEditing = false;
+
+    console.log("admin?", $scope.user.admin);
 
     //logic for making the button show and disappear
     $scope.showButton = true;
@@ -69,5 +72,16 @@ app.controller('ProductCtrl', function($scope, reviews, product, user, CartFacto
                 $scope.formSubmitted = true;
             })
         })
+    }
+
+    //logic for admin editing
+    $scope.editClicked = function() {
+        $scope.adminEditing = !$scope.adminEditing;
+        return $scope.adminEditing;
+    }
+
+    $scope.editProduct = function(data) {
+        console.log(data);
+        return ProductFactory.editProduct(product._id, data);
     }
 });

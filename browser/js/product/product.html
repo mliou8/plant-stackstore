@@ -1,6 +1,10 @@
 <div>
     <img ng-src={{product.photo[0]}} style="width:304px;height:228px;">
-    <h3>{{ product.name }}</h3>
+    <h3 ng-show="!adminEditing">{{ product.name }}</h3>
+    <div ng-show="adminEditing"><a href="#" editable-text="product.name">{{ product.name || 'empty' }}</a></div>
+    <div>
+        <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
+    </div>
     <h5>${{ product.price }}</h5>
     <h5><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
     <h5>#{{ product._id }}</h5>
@@ -47,6 +51,10 @@
 </div>
 <div ng-show="formSubmitted">
 	<h4>Review Submitted!</h4>
+</div>
+
+<div ng-show="user.admin">
+     <button class="btn btn-default" ng-click="editClicked()">edit</button>
 </div>
     <p><a ui-sref="products">Back to all products</a>
 </div>
