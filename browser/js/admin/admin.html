@@ -34,14 +34,34 @@
                 <th> Email </th>
                 <th> Address </th>
                 <th> Admin </th>
+                <th>  </th>
+                <th> test </th>
+
             </tr>
             <tr ng-repeat="user in users">
                 <td> <img id="admin-pics" src ="{{user.imageURL}}"/> </td>
                 <td> {{user.name}} </td>
                 <td> {{user.email}} </td>
                 <td> {{user.address}} </td>
-                <td> {{user.admin}} </td>
+                <td>
+                    <span ng-show="!editing"> {{user.admin}}</span>
+                     <form name="myForm" ng-show="editing && checkId(user._id)">
+                        <select name="repeatSelect"id="repeatSelect" ng-model="user.admin">{{user.admin}}
+                            <option ng-repeat="status in statuses" value="{{status}}">{{status}}</option>
+                        </select>
+                    </form>
 
+                </td>
+                <td> <button class="btn btn-default" ng-click="changeStatus(user._id)" ng-hide="editing && checkId(user._id)">edit</button>
+                        <button class="btn btn-success" ng-click="updateUser(user.admin, user._id)" ng-show="editing && checkId(user._id)">save!</button>
+                        <button class="btn btn-danger" ng-click="deleteUser(user._id)">delete</button>
+                    </div>
+                </td>
+                <td>
+                    <textarea ng-show="editing && checkId(user._id)" ng-model="user.text">
+                        {{ user.text || 'empty' }}
+                        </textarea>
+                </td>
             </tr>
 
     </div>

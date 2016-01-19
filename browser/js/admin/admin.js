@@ -19,7 +19,7 @@ app.config(function ($stateProvider) {
 
 
 
-app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, allProducts, allUsers) {
+app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory, AdminFactory, allOrders, allProducts, allUsers) {
 	//Options for Status edit
 	  $scope.statusOptions = [
 	    {value: 1, text: 'status1'},
@@ -52,6 +52,65 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, allOrders, a
 	}
 
 	$scope.users = allUsers;
+     $scope.adminMessage = "Select Status"
+     $scope.editing = false;
+     var userId = 0;
+     $scope.statuses = ["true", "false"]
+
+     $scope.checkId = function(id) {
+        return id === userId;
+     }
+
+     $scope.test = "hi"
+
+     $scope.updateStatus = function(status, id){
+     	console.log("status", status)
+     }
+     $scope.changeStatus = function(id) {
+        userId = id;
+        $scope.editing = !$scope.editing;
+        return $scope.editing;
+     }
+
+    // $scope.updateUser = function(id, text, rating) {
+    //     var submitObj = {
+    //         text: text,
+    //         rating: rating
+    //     };
+    //     AdminFactory.updateUser(id, submitObj)
+    //     .then(function(user){
+    //         console.log("updated!", user);
+    //         $scope.editing = false;
+    //     })
+    // }
+
+  $scope.updateUser = function(status, id) {
+  	console.log("new status", status)
+        var submitObj = {
+            status: status
+        };
+        AdminFactory.updateUser(id, submitObj)
+        .then(function(user){
+            console.log("updated!", user);
+            $scope.editing = false;
+        })
+    }
+
+    $scope.deleteUser = function(id){
+        AdminFactory.deleteUser(id)
+        .then(function(user){
+            console.log("deleted!", user);
+        })
+        .then(function(){
+            UserFactory.fetchAll()
+            .then(function(users){
+            console.log("USERS", users)
+            $scope.users =users;
+            })
+        })
+    }
+
+
 });
 
 //Factory to retrieve orders information
@@ -82,6 +141,29 @@ app.factory('OrderFactory', function ($http) {
 			})
 		}
 	}
+})
+
+app.factory('AdminFactory', function($http){
+   var AdminFactory = {}
+
+   AdminFactory.updateUser= function(id, data) {
+       console.log("the id", id);
+       return $http.put('api/user/' + id, data)
+       .then(function(response){
+           return response.data;
+       })
+   }
+
+   AdminFactory.deleteUser= function(id, data) {
+       console.log("the id", id);
+       return $http.delete('api/user/' + id, data)
+       .then(function(response){
+           return response.data;
+       })
+   }
+
+    return AdminFactory
+
 })
 
 
