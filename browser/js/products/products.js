@@ -12,16 +12,23 @@ app.config(function ($stateProvider) {
             },
             allCategories: function(ProductFactory) {
                 return ProductFactory.fetchAllCategories();
-            }
+            },
+            user: function(AuthService) {
+                return AuthService.getLoggedInUser();
+            },
         }
     });
 });
 
-app.controller('ProductsCtrl', function($scope, allProducts, allCategories, ProductFactory, allReviews) {
+app.controller('ProductsCtrl', function($scope, user, allProducts, allCategories, ProductFactory, allReviews) {
           //Returns the products scope object and maps onto it
           //two new properties. The average of the reviews, and how many there are
  console.log("all products", allProducts)
   console.log("all reviews", allReviews)
+ $scope.user = user;
+ console.log("USER", user)
+$scope.adminEditing = false;
+
 
  $scope.products = allProducts.map(function (product) {
         product.reviews = allReviews.filter(function (review) {
