@@ -42,6 +42,11 @@ var schema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    reset: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 });
 
