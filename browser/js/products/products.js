@@ -18,8 +18,11 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('ProductsCtrl', function($scope, allProducts, allCategories, ProductFactory, allReviews) {
-        //Returns the products scope object and maps onto it
+          //Returns the products scope object and maps onto it
           //two new properties. The average of the reviews, and how many there are
+ console.log("all products", allProducts)
+  console.log("all reviews", allReviews)
+
  $scope.products = allProducts.map(function (product) {
         product.reviews = allReviews.filter(function (review) {
             return review.product._id === product._id
@@ -80,6 +83,12 @@ app.factory('ProductFactory', function($http) {
             .then (function (response) {
                 return response.data;
             });
+        },
+        editProduct: function(id, data) {
+            return $http.put('api/products/' + id, data)
+            .then(function(response){
+                return response.data;
+            })
         }
     }
 })

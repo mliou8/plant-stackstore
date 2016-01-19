@@ -1,0 +1,71 @@
+<div class = "container">
+<h3>Unlimited Power</h3>
+   <div class="row">
+   <h3> Orders </h3>
+    <table class="col-xs-12 table-striped table-bordered table">
+    <tr>
+    <th> Customer Name </th>
+    <th> Order Status </th>
+    <th> Order Date </th>
+    <th> Toggle Details </th>
+    </tr>
+    <div class = "row"> Filter by Status <searchbar> </searchbar>
+    <tr ng-repeat-start="order in orders">
+        <td> {{order.userID.name}} </td>
+        <td> <a href="#" editable-select="order.status" e-ng-options="s.value as s.text for s in statusOptions" e-form="editStatus">
+          <span ng-hide="editStatus.$visible"> {{order.status}} </span>
+        </a>
+            <button class="btn btn-default" ng-click="editStatus.$show()" ng-hide="editStatus.$visible">
+                edit
+             </button>
+         </td>
+        <td> {{order.date}} </td>
+        <td> <button ng-click="toggleShow(order)"> Toggle Details </button> <button ng-click="editOrder(order)">
+         Save
+        </button> </td>
+    </tr>
+    <tr ng-if="order.showOrder" ng-repeat-end="">
+        <th> Product Name(s) </th>
+        <td colspan="3"> {{order.productString}} </td>
+    </tr>
+    </div>
+
+    <div class="row">
+        <h3> Users </h3>
+        <table class="col-xs-12 table-striped table-bordered table">
+            <tr>
+                <th> Image </th>
+                <th> Customer Name </th>
+                <th> Email </th>
+                <th> Address </th>
+                <th> Admin </th>
+                <th>  </th>
+                <th>Credentials</th>
+
+            </tr>
+            <tr ng-repeat="user in users">
+                <td> <img id="admin-pics" src ="{{user.imageURL}}"/> </td>
+                <td> {{user.name}} </td>
+                <td> {{user.email}} </td>
+                <td> {{user.address}} </td>
+                <td>
+                    <span ng-show="!editing"> {{user.admin}}</span>
+                     <form name="myForm" ng-show="editing && checkId(user._id)">
+                        <select name="repeatSelect"id="repeatSelect" ng-model="user.admin">{{user.admin}}
+                            <option ng-repeat="status in statuses" value="{{status}}">{{status}}</option>
+                        </select>
+                    </form>
+
+                </td>
+                <td> <button class="btn btn-default" ng-click="changeStatus(user._id)" ng-hide="editing && checkId(user._id)">EDIT ADMIN</button>
+                        <button class="btn btn-success" ng-click="updateUser(user.admin, user._id)" ng-show="editing && checkId(user._id)">SAVE</button>
+                        <button class="btn btn-danger" ng-click="deleteUser(user._id)">DELETE</button>
+                    </div>
+                </td>
+                <td>
+                        <button class="btn btn-success" ng-click="resetPW(user._id)">RESET PASSWORD</button>
+                </td>
+            </tr>
+
+    </div>
+</div>

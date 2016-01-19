@@ -7,6 +7,7 @@ router.get('/', function(req, res, next) {
         .populate('user')
         .populate('product').exec()
         .then(function(reviews) {
+            console.log(reviews);
             res.json(reviews);
         })
         .then(null, next);
