@@ -152,7 +152,7 @@ function seedReviews () {
 
       var reviewData = { rating: rating,
                           text: text,
-                          product: product._id,
+                          product: product[0]._id.toString(),
                           user:  myUsers[userIndex]._id
                         }
       console.log("reviewData", reviewData)
