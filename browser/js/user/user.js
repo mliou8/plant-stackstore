@@ -49,7 +49,7 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         })
 
      UserFactory.fetchReviews($scope.user._id)
-    .then(function(reviews){
+        .then(function(reviews){
         console.log("REVIEWS", reviews)
         $scope.user.reviews =reviews;
     })
@@ -63,6 +63,20 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         .then(function(reviews){
             console.log("updated!", reviews);
             $scope.editing = false;
+        })
+    }
+
+    $scope.deleteReview = function(id){
+        UserFactory.deleteReview(id)
+        .then(function(review){
+            console.log("deleted!", review);
+        })
+        .then(function(){
+            UserFactory.fetchReviews($scope.user._id)
+            .then(function(reviews){
+            console.log("REVIEWS", reviews)
+            $scope.user.reviews =reviews;
+            })
         })
     }
 
@@ -106,7 +120,10 @@ app.factory('UserFactory', function($http) {
             })
         },
         deleteReview: function(id) {
-            console.log("hi");
+            return $http.delete('api/review/' +id)
+            .then(function(response){
+                return response.data;
+            })
         }
     }
 });
