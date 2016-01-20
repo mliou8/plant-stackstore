@@ -16,8 +16,11 @@
                         </li>
                     </ul>
                 </li>
-                <li ng-show="!item.auth || isLoggedIn()">
+                <li ng-show="admin">
                     <a ui-sref-active="active" ui-sref="admin">ADMIN PANEL</a>
+                </li>
+                <li ng-show="!items[1].auth || isLoggedIn()">
+                    <a ui-sref-active="active" ui-sref="cart">CART</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

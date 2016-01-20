@@ -13,16 +13,34 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, 
                 })
                 scope.items.sort()
                 scope.categories = scope.items
+        })
 
-
-
-            })
+            scope.items = [
+                { label: 'Cart', state: 'cart' },
+                { label: 'Admin Panel', state: 'admin', auth: true }
+            ];
 
             scope.user = null;
 
             scope.isLoggedIn = function () {
                 return AuthService.isAuthenticated();
             };
+
+            AuthService.getLoggedInUser()
+                .then (function (user) {
+                    if (!user.admin) {
+                        scope.admin = false
+                        return false;
+                    } else {
+                        scope.admin = true
+                        return true
+                    }
+                })
+
+
+
+            // console.log("ADMIN?", scope.admin)
+
 
             scope.logout = function () {
                 AuthService.logout().then(function () {
@@ -46,8 +64,8 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, 
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, removeUser);
             $rootScope.$on(AUTH_EVENTS.sessionTimeout, removeUser);
 
-        }
 
+}
     };
 
 });
