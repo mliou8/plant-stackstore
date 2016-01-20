@@ -27,7 +27,7 @@
 
         <span ng-repeat="category in product.category">
            {{category.name}}
-           <button class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>      
+           <button class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>
         </span>
 
     </h5>
@@ -66,6 +66,7 @@
                 <div>
                     <button type="submit">Add To Cart</button>
                 </div>
+                <div class="alert alert-success" ng-show="cartAdded">Added to Cart!</div>
             </fieldset>
         </form>
     </div>
