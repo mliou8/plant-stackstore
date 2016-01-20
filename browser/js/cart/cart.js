@@ -21,15 +21,17 @@ app.controller('CartCtrl', function($scope, $state, CartFactory, ProductFactory,
     console.log(cart);
     $scope.username = user !== null ? user.name : 'guest';
     $scope.cart = cart.items;
-    console.log($scope.cart);
     $scope.total = CartFactory.totalCartPrice($scope.cart);
+    console.log($scope.total);
 
     $scope.updateCart = function() {
         CartFactory.updateCart($scope.cart,user)
         .then(function(cart) {
-            console.log('new $scope.cart',cart);
             $scope.cart = cart;
             $scope.total = CartFactory.totalCartPrice($scope.cart);
+            if(!user) {
+                $scope.$digest();
+            }
         });
     }
 
@@ -186,11 +188,10 @@ app.factory('CartFactory', function($http) {
             }
         },
         totalCartPrice: function(cart) {
-            console.log('totalprice cart',cart);
             var total = cart.reduce(function(prev,cur) {
-                return prev+(cur.product.price*cur.quantity*((100-cur.discount)/100));
+                var discount = cur.discount !== undefined ? cur.discount : 0;
+                return prev+(cur.product.price*cur.quantity*((100-discount)/100));
             },0);
-            console.log('total',total);
             return total;
         }
     }

@@ -24,10 +24,23 @@ var schema = new mongoose.Schema({
             required: true
         }
     }],
+    recipient: {
+        name: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        }
+    },
 
     promo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Promo'
+        type: mongoose.Schema.Types.Mixed,
     },
 
     date: {
