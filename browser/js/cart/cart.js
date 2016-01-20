@@ -60,9 +60,9 @@ app.factory('CartFactory', function($http) {
     
             if(itemIdx !== undefined) {
                 // if item is already present in cart, add new quantity to quantity in cart (or add 1 if no quantity specified)
-                cart[itemIdx].quantity += quantity;
+                cart[itemIdx].quantity += items[i].quantity;
             } else if(items[i].quantity >= 0) {
-                // if item is not present in cart, push item id & quanitity
+                // if item is not present in cart && quantity to add is more than zero, push item id & quanitity
                 cart.push(items[i]);
             }
         }
