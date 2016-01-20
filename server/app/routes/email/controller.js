@@ -3,7 +3,7 @@ var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: "plant.stackstore@gmail.com",
-    pass: "1511Fullstack"
+    pass: "" //password has been changed
   }
 });
 
