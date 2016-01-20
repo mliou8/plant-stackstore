@@ -121,7 +121,6 @@ function seedOrders () {
            };
         }
 
-
        for (i = 0 ; i < orders.length; i++){
            orders[i].products.push({
               product: myProducts[i]._id,
