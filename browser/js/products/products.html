@@ -26,13 +26,19 @@
 <div class = "container">
     <h3>Products</h3>
             <searchbar> </searchbar>
-        <form ng-show="adminEditing" ng-submit="addProduct()">
-            <input placeholder="Input New Product Name Here" ng-model="name"></input>
-            <input placeholder="Input New Product Photo Url Here" ng-model="photo"></input>
-            <input placeholder="Input New Product Description Here" ng-model="description"></input>
-            <input placeholder="Input New Product Price Here" ng-model="price"></input>
-            <input placeholder="Input New Product Stock Here" ng-model="stock"></input>
+        <form class="redbox" ng-show="adminEditing" ng-submit="addProduct()">
+            <h5>Name:</h5>
+            <input placeholder="Name" ng-model="name"></input><br>
+            <h5>Photo Url:</h5>
+            <input placeholder="Photo Url" ng-model="photo"></input><br>
+            <h5>Description:</h5>
+            <input placeholder="Description" ng-model="description"></input><br>
+            <h5>Price:</h5>
+            <input placeholder="Price" ng-model="price"></input><br>
+            <h5>Stock:</h5>
+            <input placeholder="Stock" ng-model="stock"></input><br>
             <!--  <input placeholder="Input New Product Categories Here" ng-model="category"></input> -->
+            <h5>Categories:</h5>
             <label ng-repeat="category in categories">
               <input
                 type="checkbox"
@@ -41,7 +47,7 @@
                 ng-checked="selection.indexOf(category.name) > -1"
                 ng-click="toggleSelection(category)"
               > {{category.name}}
-            </label>
+            </label><br>
                     <button class="btn btn-success" type="submit">Save New Product</button>
                 </div>
     </form>
