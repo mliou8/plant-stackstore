@@ -1,19 +1,23 @@
-app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) {
+app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, CategoryFactory) {
 
     return {
         restrict: 'E',
         scope: {},
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
+            CategoryFactory.fetchAll().then(function(cats){
+                console.log("cats", cats)
+                scope.categories = cats
+                scope.items = cats.map(function(cat){
+                    return cat.name
+                })
+                scope.items.sort()
+                scope.categories = scope.items
+        })
 
             scope.items = [
-                { label: 'Home', state: 'home' },
-                { label: 'Categories', state: 'categories'},
-                { label: 'Products', state: 'products' },
-                { label: 'About', state: 'about' },
                 { label: 'Cart', state: 'cart' },
-                { label: 'Members Only', state: 'membersOnly', auth: true },
-                { label: 'Unlimited Power', state: 'admin', auth: true }
+                { label: 'Admin Panel', state: 'admin', auth: true }
             ];
 
             scope.user = null;
@@ -22,14 +26,21 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
                 return AuthService.isAuthenticated();
             };
 
-            scope.isAdmin = function () {
-                return AuthService.getLoggedInUser()
+            AuthService.getLoggedInUser()
                 .then (function (user) {
                     if (!user.admin) {
+                        scope.admin = false
                         return false;
+                    } else {
+                        scope.admin = true
+                        return true
                     }
                 })
-            }
+
+
+
+            // console.log("ADMIN?", scope.admin)
+
 
             scope.logout = function () {
                 AuthService.logout().then(function () {
@@ -53,8 +64,8 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, removeUser);
             $rootScope.$on(AUTH_EVENTS.sessionTimeout, removeUser);
 
-        }
 
+}
     };
 
 });
