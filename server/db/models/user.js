@@ -6,7 +6,8 @@ var random = require('mongoose-random');
 
 var schema = new mongoose.Schema({
     name: {
-        type: String
+        type: String,
+        required: true
     },
     imageURL:{
         type: String,
@@ -14,8 +15,9 @@ var schema = new mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true
-        // required: true
+        unique: true,
+        required: true,
+        default: "guest_user"
     },
     address: {
         type: String
@@ -47,6 +49,10 @@ var schema = new mongoose.Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    guest: {
+        type: Boolean,
+        default: false
     }
 });
 

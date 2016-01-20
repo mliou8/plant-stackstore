@@ -1,4 +1,4 @@
-<div>
+<div class = "container">
     <img ng-src={{product.photo[0]}} style="width:304px;height:228px;">
     <form ng-show="adminEditing" ng-submit="changePhoto()">
             <input placeholder="Input New Url Here" ng-model="photo"></input>
@@ -7,6 +7,7 @@
                 </div>
     </form>
    <!-- logic for product name -->
+   <div class = "row">
     <h3 ng-show="!adminEditing">{{ product.name }}</h3>
     <div ng-show="adminEditing"><a href="#" editable-text="product.name">{{ product.name || 'empty' }}</a></div>
     <div>
@@ -18,6 +19,7 @@
         <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
     </div>
     <h5 ng-show="!adminEditing">${{ product.price }}</h5>
+    </div>
 
     <!-- come back to this category section!! almost done. -->
     <h5 ng-show="!adminEditing"><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
@@ -27,7 +29,7 @@
 
         <span ng-repeat="category in product.category">
            {{category.name}}
-           <button class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>      
+           <button class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>
         </span>
 
     </h5>
@@ -66,6 +68,7 @@
                 <div>
                     <button type="submit">Add To Cart</button>
                 </div>
+                <div class="alert alert-success" ng-show="cartAdded">Added to Cart!</div>
             </fieldset>
         </form>
     </div>
@@ -98,9 +101,9 @@
 <div ng-show="formSubmitted">
 	<h4>Review Submitted!</h4>
 </div>
+    <p><a ui-sref="products">Back to all products</a> </p>
+</div>
 
 <div ng-show="user.admin">
      <button class="btn btn-default" ng-click="editClicked()">edit</button>
-</div>
-    <p><a ui-sref="products">Back to all products</a>
 </div>
