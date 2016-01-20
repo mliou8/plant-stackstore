@@ -10,10 +10,10 @@ var transporter = nodemailer.createTransport({
 exports.send = function(req,res){
   console.log("req", req.body);
   var mailOptions = {
-    to: "plant.stackstore@gmail.com",
+    to: req.body.userID.email,
     subject: 'An Update to your Order',
     from: "plant.stackstore@gmail.com",
-    text: 'This is a body' + req.body.body
+    text: 'Your order of ' + req.body.productString + ' has changed to status ' + req.body.status
   };
 
 transporter.sendMail(mailOptions, function(err, info){
