@@ -42,9 +42,15 @@ app.controller('UserCtrl', function ($scope, $state, UserFactory, currentUser, a
         return $scope.editing;
      }
 
+     $(".btn-pref .btn").click(function () {
+    $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
+    // $(".tab").addClass("active"); // instead of this do the below
+    $(this).removeClass("btn-default").addClass("btn-primary");
+});
+
      UserFactory.fetchOrders($scope.user._id)
         .then(function(orders){
-            console.log("orders", orders)
+            console.log("orders", orders[0])
             $scope.user.orders =orders;
         })
 
