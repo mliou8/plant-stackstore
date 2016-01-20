@@ -8,13 +8,15 @@ var transporter = nodemailer.createTransport({
 });
 
 exports.send = function(req,res){
+  console.log("req", req.body);
   var mailOptions = {
     to: "plant.stackstore@gmail.com",
-    subject: 'New request on lumbajack from ',
-    from: req.data.from,
-    html: req.data.body
+    subject: 'An Update to your Order',
+    from: "plant.stackstore@gmail.com",
+    text: 'This is a body' + req.body.body
   };
-  transporter.sendMail(mailOptions, function(err, info){
+
+transporter.sendMail(mailOptions, function(err, info){
     if (err) {
       console.log(err);
     }else{

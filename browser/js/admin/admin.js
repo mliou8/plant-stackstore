@@ -38,8 +38,13 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 	  {value: 'shipped', text: 'shipped'}
 	];
 
+  $scope.sendMail = function (data) {
+    console.log("Got into Controller")
+    return MailFactory.sendMail(data);
+  }
 	$scope.editOrder = function (data) {
 		alert("Thanks for editing the order!")
+    $scope.sendMail(data);
 		return OrderFactory.editOrder(data._id, data);
 	}
 
@@ -119,15 +124,6 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
             		})
         	})
     }
-    $scope.mailData = {
-      from: '',
-      name: '',
-      body: ''
-    }
-
-    $scope.sendMail = function (data) {
-      return MailFactory.sendMail($scope.mailData);
-    }
 });
 
 //Factory to retrieve orders information
@@ -146,11 +142,10 @@ app.factory('OrderFactory', function ($http) {
 			});
 		},
 		editOrder: function (id, body) {
-			console.log("id ", id)
-			console.log("body", body)
+			console.log("edit id ", id)
+			console.log("edit body", body)
 			return $http.put('/api/orders/' + id, body)
 			.then(function (response) {
-				console.log("success");
 				return response.data;
 			})
 		},
@@ -192,8 +187,9 @@ app.factory('AdminFactory', function($http){
 
 app.factory('MailFactory', function ($http) {
  return {
-    postMail: function (data) {
-          $http.post('/api/email', data);
+    sendMail: function (data) {
+      console.log("Factory")
+          $http.post('/api/email', data)
     }
   }
 })
