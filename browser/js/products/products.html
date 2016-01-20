@@ -1,7 +1,55 @@
-    <div class = "container">
+
+<!-- <div>
+=======
+<div class = "container">
+>>>>>>> master
     <h3>Products</h3>
             <searchbar> </searchbar>
+        <div ng-repeat="product in products | filter: {name: searchInput}" class="col-xs-4 product-overview">
+            <a class="thumbnail" ui-sref="product({productId: product._id})">
+                <div class="caption">
+                    <h5>
+                        <img ng-src="{{product.photo[0]}}"/>
+                        <span class="product-name">{{ product.name }}</span>
+                        <br>
+                        # of Reviews: {{product.reviewLength}}
+                        <br>
+                        <uib-rating ng-model="product.average" max="5" readonly="true" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                    </h5>
+                    <h5 ng-show="product.stock === 0">Out of stock</h5>
+                </div>
+            </a>
 
+             <button ng-show="adminEditing" class="btn btn-danger" ng-click="deleteProduct(product)">delete!</button>
+        </div>
+</div> -->
+<div class = "container">
+    <h3>Products</h3>
+            <searchbar> </searchbar>
+        <form ng-show="adminEditing" ng-submit="addProduct()">
+            <input placeholder="Input New Product Name Here" ng-model="name"></input>
+            <input placeholder="Input New Product Photo Url Here" ng-model="photo"></input>
+            <input placeholder="Input New Product Description Here" ng-model="description"></input>
+            <input placeholder="Input New Product Price Here" ng-model="price"></input>
+            <input placeholder="Input New Product Stock Here" ng-model="stock"></input>
+            <!--  <input placeholder="Input New Product Categories Here" ng-model="category"></input> -->
+            <label ng-repeat="category in categories">
+              <input
+                type="checkbox"
+                name="selected Categories"
+                value="{{category.name}}"
+                ng-checked="selection.indexOf(category.name) > -1"
+                ng-click="toggleSelection(category)"
+              > {{category.name}}
+            </label>
+                    <button class="btn btn-success" type="submit">Save New Product</button>
+                </div>
+    </form>
+
+<div ng-show="user.admin">
+     <button class="btn btn-default" ng-click="editClicked()">edit</button>
+</div>
+</div>
    <div class="col-md-4 product-overview" ng-repeat="product in products | filter: {name: searchInput}">
       <h3>{{product.name}} <em class="pull-right">{{product.price | currency}}</em></h3>
 
