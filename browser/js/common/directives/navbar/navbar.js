@@ -11,11 +11,9 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
                 { label: 'Categories', state: 'categories'},
                 { label: 'Products', state: 'products' },
                 { label: 'About', state: 'about' },
-                { label: 'Documentation', state: 'docs' },
-                { label: 'Members Only', state: 'membersOnly', auth: true },
-                { label: 'Unlimited Power', state: 'admin' },
                 { label: 'Cart', state: 'cart' },
-                { label: 'Members Only', state: 'membersOnly', auth: true }
+                { label: 'Members Only', state: 'membersOnly', auth: true },
+                { label: 'Unlimited Power', state: 'admin', auth: true }
             ];
 
             scope.user = null;
@@ -23,6 +21,15 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
             scope.isLoggedIn = function () {
                 return AuthService.isAuthenticated();
             };
+
+            scope.isAdmin = function () {
+                return AuthService.getLoggedInUser()
+                .then (function (user) {
+                    if (!user.admin) {
+                        return false;
+                    }
+                })
+            }
 
             scope.logout = function () {
                 AuthService.logout().then(function () {

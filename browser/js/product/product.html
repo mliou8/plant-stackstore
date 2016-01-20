@@ -1,4 +1,4 @@
-<div>
+<div class = "container">
     <img ng-src={{product.photo[0]}} style="width:304px;height:228px;">
     <form ng-show="adminEditing" ng-submit="changePhoto()">
             <input placeholder="Input New Url Here" ng-model="photo"></input>
@@ -99,9 +99,9 @@
 <div ng-show="formSubmitted">
 	<h4>Review Submitted!</h4>
 </div>
+    <p><a ui-sref="products">Back to all products</a> </p>
+</div>
 
 <div ng-show="user.admin">
      <button class="btn btn-default" ng-click="editClicked()">edit</button>
-</div>
-    <p><a ui-sref="products">Back to all products</a>
 </div>
