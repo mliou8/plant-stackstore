@@ -32,7 +32,10 @@ $scope.adminEditing = false;
 
  $scope.products = allProducts.map(function (product) {
         product.reviews = allReviews.filter(function (review) {
+            //this is because after deleting there won't be a product, and we decided not to delete the reviews so we have them for later reference (in case, you know, we want them)
+            if (review.product) {
             return review.product._id === product._id
+            }  
         })
         product.categories = "";
         for (var i = 0; i < product.category.length; i++) {
