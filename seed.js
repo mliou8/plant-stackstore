@@ -155,7 +155,7 @@ function seedReviews () {
                           product: product[0]._id.toString(),
                           user:  myUsers[userIndex]._id
                         }
-      console.log("reviewData", reviewData)
+    //  console.log("reviewData", reviewData)
       promises.push(Review.create(reviewData))
       reviewCount--
     }
