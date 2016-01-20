@@ -7,6 +7,7 @@
                 </div>
     </form>
    <!-- logic for product name -->
+   <div class = "row">
     <h3 ng-show="!adminEditing">{{ product.name }}</h3>
     <div ng-show="adminEditing"><a href="#" editable-text="product.name">{{ product.name || 'empty' }}</a></div>
     <div>
@@ -18,6 +19,7 @@
         <button class="btn btn-success" ng-show="adminEditing" ng-click="editProduct(product)">save!</button>
     </div>
     <h5 ng-show="!adminEditing">${{ product.price }}</h5>
+    </div>
 
     <!-- come back to this category section!! almost done. -->
     <h5 ng-show="!adminEditing"><span ng-repeat="category in product.category"><a ui-sref="category({categoryName: category.name})">{{ category.name }}</a><span ng-show="!$last">, </span></span></h5>
