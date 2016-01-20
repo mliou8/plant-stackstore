@@ -16,6 +16,9 @@
                         </li>
                     </ul>
                 </li>
+                <li ng-show="!item.auth || isLoggedIn()">
+                    <a ui-sref-active="active" ui-sref="admin">ADMIN PANEL</a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a ng-show="!user" ui-sref="login" id="login-button">LOGIN</a>

@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <h3>Products</h3>
             <searchbar> </searchbar>
 
@@ -21,7 +21,34 @@
                 </div>
             </a>
         </div>
+</div> -->
 
+    <h3>Products</h3>
+            <searchbar> </searchbar>
 
-</div>
+   <div class="col-md-4 product-overview" ng-repeat="product in products | filter: {name: searchInput}">
+      <h3>{{product.name}} <em class="pull-right">{{product.price | currency}}</em></h3>
+
+      <!-- Image Gallery  -->
+      <a class="thumbnail" ui-sref="product({productId: product._id})">
+        <div class="img-wrap">
+          <img ng-src="{{product.photo[0]}}" />
+        </div>
+        <div class="caption">
+
+                    <h5>
+                        <br>
+                        # of Reviews: {{product.reviewLength}}
+                        <br>
+                        <uib-rating ng-model="product.average" max="5" readonly="true" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                    </h5>
+                    <h5 ng-show="product.stock === 0">Out of stock</h5>
+                </div>
+<!--         <ul class="img-thumbnails clearfix">
+          <li class="small-image pull-left thumbnail" >
+            <img ng-src="{{product.photo[0]}}" />
+          </li>
+        </ul> -->
+      </div>
+    </div>
 
