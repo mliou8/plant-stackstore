@@ -25,6 +25,11 @@ var schema = new mongoose.Schema({
         }
     }],
 
+    promo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Promo'
+    },
+
     date: {
         type: Date,
         default: Date.now,

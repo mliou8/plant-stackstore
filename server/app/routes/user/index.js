@@ -6,12 +6,10 @@ var User = mongoose.model('User');
 var Order = mongoose.model('Order');
 var Cart = mongoose.model('Cart');
 var Product = mongoose.model('Product');
+var Promo = mongoose.model('Promo');
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json()
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-
-
 
 router.get('/', function(req, res, next) {
     User.find().exec()
@@ -22,9 +20,7 @@ router.get('/', function(req, res, next) {
         .then(null, next);
 });
 
-
 router.post('/', function(req, res,  next) {
-    console.log("trying to post to user", req.body.data )
     User
         .create(req.body.data)
         .then(function(user) {
@@ -72,9 +68,9 @@ router.put('/:id', function(req, res, next) {
 
             for(var key in req.body) {
                 // don't let users set themselves as admins
-                if(key !== 'admin') {
+                // if(key !== 'admin') {
                     user[key] = req.body[key];
-                }
+                // }
             }
             return user.save();
         })
@@ -121,7 +117,7 @@ router.get('/:id/orders', function(req, res, next) {
 router.get('/:id/cart', function(req, res, next) {
     Cart
         .findOne({ user: req.params.id })
-        .populate('items.product')
+        .populate('items.product promo')
         .exec()
         .then(function(cart) {
             if(!cart) {
@@ -291,10 +287,76 @@ router.delete('/:id/cart', function(req, res, next) {
                 err.status = 404;
                 throw err;
             }
-            
+
             res.json(cart);
         })
        .then(null, next);
+});
+
+router.get('/:id/promo', function(req, res, next) {
+    Cart.findOne({ user: req.params.id })
+        .populate('promo')
+        .exec()
+        .then(function(cart) {
+            console.log(cart.promo);
+            if(!cart) {
+                var err = new Error('Cart for user #'+req.params.id+' not found');
+                err.status = 404;
+                throw err;
+            } else if(cart.promo === null || cart.promo === undefined) {
+                err = new Error('No promo associated with user #'+req.params.id+'cart');
+                err.status = 404;
+                throw err;
+            } else if(promo.expires < Date.now()) {
+                err = new Error(req.params.code);
+                err.status = 410;
+                throw err;
+            }
+            res.json(cart.promo);
+        })
+        .then(null, next);
+})
+
+router.post('/:id/promo', function(req, res, next) {
+    var cart = Cart.findOne({ user: req.params.id });
+    var promo = Promo.findOne({ code: req.body.code });
+
+    Promise.all([cart, promo])
+        .spread(function (cart, promo) {
+            if(!promo) {
+                var err = new Error('Promo code "'+req.body.code+'" not found');
+                err.status = 404;
+                throw err;
+            } else if(!cart) {
+                err = new Error('Cart for user #'+req.params.id+' not found');
+                err.status = 404;
+                throw err;
+            } else if(promo.expires < Date.now()) {
+                err = new Error(req.params.code);
+                err.status = 410;
+                throw err;
+            }
+
+            cart.promo = promo._id;
+            return Promise.all([cart.save(), promo]);
+        })
+        .spread(function (cart, promo) {
+            res.json(promo);
+        })
+        .then(null, next);
+});
+
+router.delete('/:id/promo', function(req, res, next) {
+    Cart.findOneAndUpdate({ user: req.params.id },{ $unset: { promo: 1 }}, { new: true })
+        .then(function(cart) {
+            if(!cart) {
+                err = new Error('Cart for user #'+req.params.id+' not found');
+                err.status = 404;
+                throw err;
+            }
+            res.json(cart);
+        })
+        .then(null, next);
 });
 
 module.exports = router;

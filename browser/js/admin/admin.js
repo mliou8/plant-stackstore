@@ -79,8 +79,6 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
        return id === userId;
     }
 
-    $scope.test = "hi"
-
     $scope.updateStatus = function(status, id){
     	console.log("status", status)
     }
@@ -93,7 +91,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 
   	$scope.updateUser = function(status, id) {
   		var submitObj = {
-  		    status: status
+  		    admin: status
   		};
 
   		AdminFactory.updateUser(id, submitObj)
@@ -162,14 +160,14 @@ app.factory('AdminFactory', function($http){
    var AdminFactory = {}
 
    AdminFactory.updateUser= function(id, data) {
-	       return $http.put('api/user/' + id, data)
+	       return $http.put('/api/user/' + id, data)
        .then(function(response){
            return response.data;
        })
    }
 
    AdminFactory.resetPW= function(id) {
-       return $http.put('api/user/' + id, {reset: true})
+       return $http.put('/api/user/' + id, {reset: true})
        .then(function(response){
            return response.data;
        })

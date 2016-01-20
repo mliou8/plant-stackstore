@@ -1,0 +1,100 @@
+<div class = "container">
+    <h3>Checkout</h3>
+    <h4>Cart</h4>
+    <div class="row">
+        <div class="col-xs-6">Product</div>
+        <div class="col-xs-3">Price</div>
+        <div class="col-xs-3">Quantity</div>
+    </div>
+    <div ng-repeat="item in cart" class="row">
+        <div class="col-xs-6">{{ item.product.name }}</div>
+        <div class="col-xs-3">
+            {{ item.product.price*((100-item.discount)/100) | currency:"$" }}<span ng-show="item.discount !== 0"> ({{ item.product.price*(item.discount/100) | currency:"$"}} off with promo)<span>
+            <!-- <div class="row" ng-show="item.discount !== 0">
+                <div class="col-xs-12">
+                    <span>{{ item.product.price*(item.discount/100) | currency:"$"}} off with promo<span>
+                </div>
+            </div> -->
+        </div>
+        <div class="col-xs-3">{{ item.quantity }}</div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6"><strong>Total<strong></div>
+        <div class="col-xs-3">{{ total | currency:"$" }}</div>
+    </div>
+    <div class="row">
+        <form novalidate class="form-inline" ng-submit="applyPromo()" name="promoForm">
+            <fieldset>
+                <div class="form-group col-xs-12">
+                    <div class="row" ng-show="promo !== undefined">
+                        <div class="col-xs-12">
+                            <label>Promo Code: <span>{{ promo.code }}</span></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span ng-show="invalidPromo">Invalid promo code<span>
+                            <span ng-show="expiredPromo">Expired promo code</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" ng-show="promo !== undefined && changePromo === false">
+                            <button type="button" class="btn btn-default" ng-click="newPromo()">Change Promo</button>
+                            <button type="button" class="btn btn-danger" ng-click="deletePromo()">Delete Promo</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12" ng-show="promo === undefined || changePromo === true">
+                            <label for="promoCode"><span ng-show="changePromo === true">New</span><span ng-show="changePromo !== true">Promo</span> Code</label>
+                            <input type="text" class="form-control" id="promoCode" ng-model="promoCode" name="code" required/>
+                            <button type="submit" class="btn btn-primary" ng-disabled="promoForm.$invalid">Apply to Cart</button>
+                            <button type="button" ng-click="cancelNewPromo()" class="btn btn-danger" ng-show="changePromo">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h4>Shipping Info</h4>
+            <form novalidate class="form-horizontal" ng-submit="createOrder()" name="shippingInfo">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="shipName" class="col-xs-1">Recipient</label>
+                        <div class="col-xs-9">
+                            <input type="text" ng-model="user.name" class="form-control" id="shipName" name="name" required/>
+                        </div>
+                        <div class="col-xs-2">
+                            <span ng-show="shippingInfo.name.$touched && shippingInfo.name.$error.required">You must enter the recipient's name.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipAddress" class="col-xs-1">Address</label>
+                        <div class="col-xs-9">
+                            <input type="text" ng-model="user.address" class="form-control" id="shipAddress" name="address" required/>
+                        </div>
+                        <div class="col-xs-2">
+                            <span ng-show="shippingInfo.address.$touched && shippingInfo.address.$error.required">You must enter the recipient's address.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="shipEmail" class="col-xs-1">Email</label>
+                        <div class="col-xs-9">
+                            <input type="email" ng-model="user.email" class="form-control" id="shipEmail" name="email" required/>
+                        </div>
+                        <div class="col-xs-2">
+                            <span ng-show="shippingInfo.email.$touched && shippingInfo.email.$error.email || shippingInfo.email.$error.required">You must enter a valid email address.</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-offset-1 col-xs-11">
+                            <button type="submit" class="btn btn-default" ng-disabled="shippingInfo.$invalid">Place Order</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+            <pre>{{ shippingInfo | json }}</pre>
+        </div>
+    </div>
+</div>

@@ -17,9 +17,11 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, user) {
-    $scope.username = user ? user.name : 'guest';
-    $scope.cart = cart;
+app.controller('CartCtrl', function($scope, $state, CartFactory, ProductFactory, cart, user) {
+    console.log(cart);
+    $scope.username = user !== null ? user.name : 'guest';
+    $scope.cart = cart.items;
+    console.log($scope.cart);
     $scope.total = CartFactory.totalCartPrice($scope.cart);
 
     $scope.updateCart = function() {
@@ -32,7 +34,7 @@ app.controller('CartCtrl', function($scope, CartFactory, ProductFactory, cart, u
     }
 
     $scope.checkout = function() {
-
+        $state.go('checkout');
     }
 });
 
@@ -72,9 +74,13 @@ app.factory('CartFactory', function($http) {
                 return res.data;
             });
     };
+    var applyDiscount = function(price, discount) {
+
+    };
 
     var getLocalCart = function() {
         var cart = JSON.parse(localStorage.getItem('cart'));
+        var promoCode = localStorage.getItem('promo');
         if(cart === null) {
             cart = [];
             localStorage.setItem('cart', JSON.stringify(cart));
@@ -82,19 +88,25 @@ app.factory('CartFactory', function($http) {
 
         return $http.post('/api/products/cartlookup', { items: cart })
             .then(function(res) {
-                return res.data.items.map(function(product, i) {
+                res.data.items = res.data.items.map(function(item, i) {
                     return {
-                        product: product,
+                        product: item,
                         quantity: cart[i].quantity
+                    }
+                })
+                if(promoCode !== null) {
+                    res.data.promo = {
+                        code: promoCode
                     };
-                });
+                }
+                return res.data;
             });
     };
 
     var getServerCart = function(user) {
         return $http.get('/api/user/'+user+'/cart')
             .then(function(res) {
-                return res.data.items;
+                return res.data;
             })
     };
 
@@ -174,9 +186,12 @@ app.factory('CartFactory', function($http) {
             }
         },
         totalCartPrice: function(cart) {
-            return cart.reduce(function(prev,cur) {
-                return prev+(cur.product.price*cur.quantity);
+            console.log('totalprice cart',cart);
+            var total = cart.reduce(function(prev,cur) {
+                return prev+(cur.product.price*cur.quantity*((100-cur.discount)/100));
             },0);
+            console.log('total',total);
+            return total;
         }
     }
 })

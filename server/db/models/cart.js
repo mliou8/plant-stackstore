@@ -16,7 +16,11 @@ var schema = new mongoose.Schema({
             type: Number,
             default: 1
         }
-    }]
+    }],
+    promo: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Promo'
+    }
 });
 
 mongoose.model('Cart', schema);
