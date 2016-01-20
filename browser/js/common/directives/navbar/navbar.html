@@ -1,18 +1,30 @@
-<nav class="navbar navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <fullstack-logo></fullstack-logo>
+    <div id="custom-bootstrap-menu" class="navbar navbar-default " role="navigation">
+            <ul class="nav navbar-nav navbar-left">
+                <li ng-show="!item.auth || isLoggedIn()">
+                    <a ui-sref-active="active" ui-sref="home">HOME</a>
+                </li>
+                <li uib-dropdown is-open="status.isopen" class="nav navbar-nav navbar-left">
+                        <a uib-dropdown-toggle ng-disabled="disabled">
+                            DEPARTMENTS<span class="caret"></span>
+                        </a>
+                    <ul uib-dropdown-menu role="menu" aria-labelledby="single-button">
+                        <li role="menuitem">
+                            <a ui-sref-active="active" ui-sref="products">ALL PRODUCTS</a>
+                        </li>
+                        <li ng-repeat="category in categories" role="menuitem">
+                            <a ui-sref-active="active" ui-sref="category({categoryName: category})">{{ category.toUpperCase() }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a ng-show="!user" ui-sref="login" id="login-button">LOGIN</a>
+                </li>
+                <li ng-show="user"><a ng-click="logout()">LOGOUT</a>
+                </li>
+                <li ng-show="user" class="welcome"><span>Welcome, {{ user.name }}!</span></a>
+                </li>
+                <li><a ng-show="user" ui-sref="user">MY PROFILE</a>
+                </li>
+            </ul>
         </div>
-        <ul class="nav navbar-nav">
-            <li ng-repeat="item in items" ng-show="!item.auth || isLoggedIn()">
-                <a ui-sref-active="active" ui-sref="{{ item.state }}">{{ item.label }}</a>
-            </li>
-        </ul>
-<button ng-show="!user" ui-sref="login" class="btn login-button">Login</button>
-<button ng-show="user" ui-sref="user" class="btn login-button">User</button>
-        <div ng-show="user" class="welcome">
-            <span>Welcome, {{ user.name }}!</span>
-            <a ng-click="logout()">Logout</a>
-        </div>
-    </div>
-</nav>
