@@ -16,13 +16,28 @@ app.config(function($stateProvider) {
             },
             categories: function(CategoryFactory) {
                 return CategoryFactory.fetchAll();
+            },
+            cart: function(user, CartFactory) {
+                return CartFactory.getCart(user);
             }
         }
     });
 });
 
-app.controller('ProductCtrl', function($scope, categories, reviews, product, user, CartFactory, ProductFactory, AuthService) {
+app.controller('ProductCtrl', function($scope, cart, categories, reviews, product, user, CartFactory, ProductFactory, AuthService) {
     $scope.product = product;
+    var decreaseStock = function(n) {
+        $scope.product.stock -= n;
+    }
+    for(var i = 0; i < cart.items.length; i++) {
+        console.log('cart',cart.items[i].product);
+        console.log('product',$scope.product._id);
+        if(cart.items[i].product._id === $scope.product._id) {
+            decreaseStock(cart.items[i].quantity);
+            console.log($scope.product.stock);
+            // $scope.$digest();
+        }
+    }
     console.log("PRODUCT", $scope.product)
     $scope.reviews = reviews;
     $scope.user = user;
@@ -51,7 +66,8 @@ app.controller('ProductCtrl', function($scope, categories, reviews, product, use
             quantity: $scope.amount
         }],user);
 
-        $scope.product.stock = $scope.product.stock-$scope.amount
+        decreaseStock($scope.amount);
+        // $scope.$digest();
         $scope.cartAdded = true;
 
     }

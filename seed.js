@@ -117,15 +117,24 @@ function seedOrders () {
         for(i=0; i< myUsers.length ; i++){
           orders[i] = {userID: myUsers[i]._id.toString(),
                       products: [],
-                      status: statuses[Math.floor(Math.random() * (3 - 1 + 1)) + 1]
+                      status: statuses[Math.floor(Math.random() * (3 - 1 + 1)) + 1],
+                      recipient: {
+                        name: "Emily Chesler",
+                        email: "emilychesler@gmail.com",
+                        address: "224 Burns St"
+                      }
            };
         }
 
        for (i = 0 ; i < orders.length; i++){
            orders[i].products.push({
               product: myProducts[i]._id,
-              quantity: Math.floor(Math.random() * (10 - 1 + 1)) + 1
-
+              quantity: Math.floor(Math.random() * (10 - 1 + 1)) + 1,
+                      recipient: {
+                        name: "Emily Chesler",
+                        email: "emilychesler@gmail.com",
+                        address: "224 Burns St"
+                      }
             });
 
          console.log("order", orders[i])
