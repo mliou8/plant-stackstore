@@ -73,19 +73,24 @@
         </form>
     </div>
     <h4>Reviews</h4>
-    <div class="row">
-        <div ng-repeat="review in reviews" class="col-xs-12">
-            <div class="caption">
-                <h5>
-                    <span>{{review.user.name}}</span>
-                </h5>
-                <h6>
-                	<span>Rating: {{review.rating}} /5</span>
-                </h6>
-                <p>{{review.text}}</p>
-            </div>
-        </div>
-    </div>
+    <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Review</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat = "review in reviews">
+                    <td>{{review.user.name}}</td>
+                    <td>
+                    <uib-rating ng-model="review.rating" max="max" readonly="!checkId(review._id) || !editing" on-hover="hoveringOver(value)" on-leave="overStar = null" titles="['one','two','three']" aria-labelledby="default-rating"></uib-rating>
+                     </td>
+                    <td>{{review.text}}</td>
+                  </tr>
+                </tbody>
+              </table>
 
 <button class="btn btn-primary" ng-click="showButton=false" ng-show="showButton && user">Write Review</button>
 <div ng-show="!showButton && !formSubmitted">
@@ -107,3 +112,5 @@
 <div ng-show="user.admin">
      <button class="btn btn-default" ng-click="editClicked()">edit</button>
 </div>
+
+
