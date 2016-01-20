@@ -39,6 +39,7 @@ var schema = new mongoose.Schema({
 
 schema.statics.decreaseStock = function(items) {
     var self = this;
+    console.log('decrease');
     var products = items.map(function(item) {
         console.log('item',item);
         return self

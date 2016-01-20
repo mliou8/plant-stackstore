@@ -33,7 +33,7 @@ app.config(function($stateProvider) {
     })
 });
 
-app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, cart, promo, user) {
+app.controller('CheckoutCtrl', function($scope, $state, CartFactory, CheckoutFactory, cart, promo, user) {
     if(user !== null) {
         $scope.user = {
             _id: user._id,
@@ -63,6 +63,7 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
             .sendOrder(cart, $scope.promo, recipient, user)
             .then(function(order) {
                 console.log(order);
+                $state.go('order',{ id: order._id });
             })
             .catch(function(err) {
                 console.log(err);
@@ -208,7 +209,7 @@ app.factory('CheckoutFactory', function($http) {
         },
         sendOrder: function(cart, promo, recipient, user) {
             console.log('cart',cart,'promo',promo,'recipient',recipient,'user',user)
-            return $http.post('/api/order',{
+            return $http.post('/api/orders',{
                 user: user !== null ? user._id : undefined,
                 cart: cart._id !== undefined ? cart._id : cart.items.map(function(item) {
                     return {

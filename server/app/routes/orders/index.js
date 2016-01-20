@@ -22,6 +22,7 @@ router.post('/', function(req, res, next) {
         cart,
         promo,
         data;
+    console.log('post');
 
     if(req.body.user === undefined) {
         user = User.create({
@@ -69,6 +70,7 @@ router.post('/', function(req, res, next) {
             return Promise.all([user, cart, promo, products]);
         })
         .spread(function(user, cart, promo, products) {
+            console.log('products',products);
             return Order.create({
                 userID: user._id,
                 products: cart.items,
@@ -78,6 +80,7 @@ router.post('/', function(req, res, next) {
             })
         })
         .then(function(order) {
+            console.log('order',order);
             res.json(order);
         })
         .then(null, next);
