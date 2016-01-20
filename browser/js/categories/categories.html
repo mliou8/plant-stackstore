@@ -1,5 +1,7 @@
-<div>
+<div class="container">
+<div class="row"
     <h3>Categories</h3>
+</div>
     <div class="row">
         <div ng-repeat="category in categories" class="col-xs-4">
             <a class="thumbnail" ui-sref="category({categoryName: category.name})">
@@ -9,6 +11,21 @@
                     </h5>
                 </div>
             </a>
+            <button ng-show="adminEditing" class="btn btn-danger" ng-click="deleteCategory(category)">delete!</button>
         </div>
     </div>
+</div>
+
+<div>
+<form ng-show="adminEditing" ng-submit="addCategory()">
+            <input placeholder="Input New Category Here" ng-model="category"></input>
+                <div>
+                    <button class="btn btn-success" type="submit">Add New Category</button>
+                </div>
+    </form>
+
+</div>
+
+<div ng-show="user.admin">
+     <button class="btn btn-default" ng-click="editClicked()">edit</button>
 </div>

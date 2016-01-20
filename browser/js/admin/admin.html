@@ -2,15 +2,27 @@
 <h3>Unlimited Power</h3>
    <div class="row">
    <h3> Orders </h3>
-    <table class="col-xs-12 table-striped table-bordered table">
+
+<div class = "row search-bar order-search col-md-5">
+  <select class="form-control" ng-model="searchInput">
+  <option value = ""> Filter by Status (Show all) </option> <span class="caret"></span>
+  <option value = "pending"> Pending </option>
+  <option value = "completed"> Completed </option>
+  <option value = "delivered"> Delivered </option>
+  <option value = "shipped"> Shipped </option>
+  </select>
+</div>
+
+
+
+<table class="col-xs-12 table-striped table-bordered table">
     <tr>
     <th> Customer Name </th>
     <th> Order Status </th>
     <th> Order Date </th>
     <th> Toggle Details </th>
     </tr>
-    <div class = "row"> Filter by Status <searchbar> </searchbar>
-    <tr ng-repeat-start="order in orders">
+    <tr ng-repeat-start="order in orders | filter: {status: searchInput}" >
         <td> {{order.userID.name}} </td>
         <td> <a href="#" editable-select="order.status" e-ng-options="s.value as s.text for s in statusOptions" e-form="editStatus">
           <span ng-hide="editStatus.$visible"> {{order.status}} </span>
@@ -28,8 +40,8 @@
         <th> Product Name(s) </th>
         <td colspan="3"> {{order.productString}} </td>
     </tr>
+</table>
     </div>
-
     <div class="row">
         <h3> Users </h3>
         <table class="col-xs-12 table-striped table-bordered table">
@@ -66,6 +78,5 @@
                         <button class="btn btn-success" ng-click="resetPW(user._id)">RESET PASSWORD</button>
                 </td>
             </tr>
-
     </div>
 </div>

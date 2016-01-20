@@ -9,7 +9,18 @@ app.config(function ($stateProvider) {
         	},
         	allProducts: function (OrderFactory) {
         		return OrderFactory.allProducts();
-        	},
+         	},
+        	isadmin: function (AuthService, $state) {
+        	 AuthService.getLoggedInUser()
+        		.then (function (user) {
+        			console.log("user ", user);
+        			if(!user.admin || !user) {
+        				console.log("Naughty naughty");
+        				return $state.go('home');
+        			}
+        			return
+        		})
+		    },
             allUsers: function (UserFactory) {
         		return UserFactory.fetchAll();
         	}
@@ -17,10 +28,9 @@ app.config(function ($stateProvider) {
     });
 });
 
-
-
-app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory, AdminFactory, allOrders, allProducts, allUsers) {
+app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory, AdminFactory, allOrders, allProducts, allUsers, MailFactory) {
 	//Options for Status edit
+
 	$scope.statusOptions = [
 	  {value: 'pending', text: 'pending'},
 	  {value: 'completed', text: 'completed'},
@@ -28,8 +38,13 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
 	  {value: 'shipped', text: 'shipped'}
 	];
 
+  $scope.sendMail = function (data) {
+    console.log("Got into Controller")
+    return MailFactory.sendMail(data);
+  }
 	$scope.editOrder = function (data) {
 		alert("Thanks for editing the order!")
+    $scope.sendMail(data);
 		return OrderFactory.editOrder(data._id, data);
 	}
 
@@ -103,7 +118,7 @@ app.controller('AdminCtrl', function ($scope, $state, OrderFactory, UserFactory,
         	.then(function(){
             	UserFactory.fetchAll()
             		.then(function(users){
-            			$scope.users =users;
+            			$scope.users = users;
             		})
         	})
     }
@@ -125,11 +140,10 @@ app.factory('OrderFactory', function ($http) {
 			});
 		},
 		editOrder: function (id, body) {
-			console.log("id ", id)
-			console.log("body", body)
+			console.log("edit id ", id)
+			console.log("edit body", body)
 			return $http.put('/api/orders/' + id, body)
 			.then(function (response) {
-				console.log("success");
 				return response.data;
 			})
 		},
@@ -165,9 +179,17 @@ app.factory('AdminFactory', function($http){
            return response.data;
        })
    }
+    return AdminFactory;
 
-    return AdminFactory
+})
 
+app.factory('MailFactory', function ($http) {
+ return {
+    sendMail: function (data) {
+      console.log("Factory")
+          $http.post('/api/email', data)
+    }
+  }
 })
 
 

@@ -23,6 +23,7 @@ app.config(function($stateProvider) {
 
 app.controller('ProductCtrl', function($scope, categories, reviews, product, user, CartFactory, ProductFactory, AuthService) {
     $scope.product = product;
+    console.log("PRODUCT", $scope.product)
     $scope.reviews = reviews;
     $scope.user = user;
     $scope.amount = 1;
@@ -42,12 +43,17 @@ app.controller('ProductCtrl', function($scope, categories, reviews, product, use
     $scope.rate = 0;
     $scope.max = 5;
     $scope.isReadonly = false;
+    $scope.cartAdded = false;
 
     $scope.addToCart = function() {
         CartFactory.addToCart([{
             product: $scope.product._id,
             quantity: $scope.amount
         }],user);
+
+        $scope.product.stock = $scope.product.stock-$scope.amount
+        $scope.cartAdded = true;
+
     }
 
     $scope.hoveringOver = function(value) {
