@@ -66,11 +66,12 @@ router.post('/', function(req, res, next){
 		stock: req.body.stock,
 	})
 	.then(function(created){
+		var categories;
 		if (typeof req.body.category === "string") {
-			var categories = req.body.category.split(", ");
+			categories = req.body.category.split(", ");
 		}
 		else {
-			var categories = req.body.category;
+			categories = req.body.category;
 		}
 
 		categories.forEach(function(category){

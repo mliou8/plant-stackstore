@@ -20,8 +20,32 @@
                     <h5 ng-show="product.stock === 0">Out of stock</h5>
                 </div>
             </a>
+
+             <button ng-show="adminEditing" class="btn btn-danger" ng-click="deleteProduct(product)">delete!</button>
         </div>
 
+        <form ng-show="adminEditing" ng-submit="addProduct()">
+            <input placeholder="Input New Product Name Here" ng-model="name"></input>
+            <input placeholder="Input New Product Photo Url Here" ng-model="photo"></input>
+            <input placeholder="Input New Product Description Here" ng-model="description"></input>
+            <input placeholder="Input New Product Price Here" ng-model="price"></input>
+            <input placeholder="Input New Product Stock Here" ng-model="stock"></input>
+            <!--  <input placeholder="Input New Product Categories Here" ng-model="category"></input> -->
+            <label ng-repeat="category in categories">
+              <input
+                type="checkbox"
+                name="selected Categories"
+                value="{{category.name}}"
+                ng-checked="selection.indexOf(category.name) > -1"
+                ng-click="toggleSelection(category)"
+              > {{category.name}}
+            </label>
+                    <button class="btn btn-success" type="submit">Save New Product</button>
+                </div>
+    </form>
 
+<div ng-show="user.admin">
+     <button class="btn btn-default" ng-click="editClicked()">edit</button>
+</div>
 </div>
 
