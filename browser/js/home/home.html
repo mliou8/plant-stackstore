@@ -1,18 +1,11 @@
-<section id="home">
+<html class="full"
+><section id="home">
     <!-- Header Carousel -->
-
-    <uib-carousel>
-      <uib-slide ng-repeat="slide in slides" active="slide.active" class="carousel-inner" index="slide.id">
-              <a ui-sref="product({productId: slide._id})">
-
-        <img align="middle" class="slide" ng-src="{{slide.photo[0]}}" style="margin:auto;">
-        <div class="carousel-caption">
-          <h4>FEATURED PLANTS</h4>
-
-            <p>{{slide.name}}</p>
-        </div>
-    </a>
-      </uib-slide>
-    </uib-carousel>
+<body>
+  <div id="pic-container" class="container">
+<img id="backgroundimage" src="https://sisterdiscodotcom.files.wordpress.com/2013/06/nature-houses-doors-vines-hd-wallpaper.jpg"/>
+</div>
+</body>
 
 </section>
+</html>
