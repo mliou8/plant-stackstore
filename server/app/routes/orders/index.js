@@ -71,15 +71,25 @@ router.post('/', function(req, res, next) {
         })
         .spread(function(user, cart, promo, products) {
             console.log('products',products);
-            return Order.create({
+            var order = Order.create({
                 userID: user._id,
                 products: cart.items,
                 recipient: req.body.recipient,
                 promo: promo !== undefined && promo.available ? promo : undefined,
                 status: 'pending'
             })
+            return Promise.all([cart, order]);
         })
-        .then(function(order) {
+        .spread(function(cart, order) {
+            cart = cart.update({
+                items: [],
+                $unset: {
+                    promo: 1
+                }
+            }, { new: true })
+            return Promise.all([cart, order]);
+        })
+        .spread(function(cart, order) {
             console.log('order',order);
             res.json(order);
         })

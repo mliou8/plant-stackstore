@@ -63,6 +63,8 @@ app.controller('CheckoutCtrl', function($scope, $state, CartFactory, CheckoutFac
             .sendOrder(cart, $scope.promo, recipient, user)
             .then(function(order) {
                 console.log(order);
+                localStorage.removeItem('promo');
+                localStorage.removeItem('cart');
                 $state.go('order',{ id: order._id });
             })
             .catch(function(err) {
