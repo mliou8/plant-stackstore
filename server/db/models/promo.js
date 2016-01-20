@@ -56,4 +56,9 @@ schema.pre('save', function(next, done) {
     }
 });
 
+schema.virtual('available').get(function() {
+    var now = Date.now();
+    return this.begins < now && now < this.expires;
+})
+
 mongoose.model('Promo', schema);

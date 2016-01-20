@@ -54,8 +54,19 @@ app.controller('CheckoutCtrl', function($scope, CartFactory, CheckoutFactory, ca
     console.log($scope.promo);
 
     $scope.createOrder = function() {
-        console.log($scope.user);
-        console.log($scope.shippingInfo);
+        var recipient = {
+            name: $scope.shippingInfo.name.$modelValue,
+            address: $scope.shippingInfo.address.$modelValue,
+            email: $scope.shippingInfo.email.$modelValue
+        }
+        CheckoutFactory
+            .sendOrder(cart, $scope.promo, recipient, user)
+            .then(function(order) {
+                console.log(order);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
     }
 
     $scope.applyPromo = function() {
@@ -194,12 +205,23 @@ app.factory('CheckoutFactory', function($http) {
                 localStorage.setItem('promo', promo.code);
                 return Promise.resolve(promo);
             }
+        },
+        sendOrder: function(cart, promo, recipient, user) {
+            console.log('cart',cart,'promo',promo,'recipient',recipient,'user',user)
+            return $http.post('/api/order',{
+                user: user !== null ? user._id : undefined,
+                cart: cart._id !== undefined ? cart._id : cart.items.map(function(item) {
+                    return {
+                        product: item.product._id,
+                        quantity: item.quantity
+                    }
+                }),
+                promo: promo._id,
+                recipient: recipient
+            })
+                .then(function(res) {
+                    return res.data;
+                });
         }
-        // sendOrder: function(cart, user) {
-        //     return $http.post('/api/order', {})
-        //         .then(function(res) {
-        //             return res.data;
-        //         });
-        // }
     };
 })
